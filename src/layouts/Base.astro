@@ -4,16 +4,27 @@ import '@fontsource-variable/fraunces/standard-italic.css';
 import '@fontsource-variable/newsreader/standard.css';
 import '@fontsource-variable/newsreader/standard-italic.css';
 import '@fontsource-variable/inter/index.css';
+import frauncesUrl from '@fontsource-variable/fraunces/files/fraunces-latin-standard-normal.woff2?url';
+import newsreaderUrl from '@fontsource-variable/newsreader/files/newsreader-latin-standard-normal.woff2?url';
 import '../styles/tokens.css';
 import '../styles/base.css';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import { loadSettings } from '../lib/content';
+import { canonicalUrl } from '../lib/site';
 
 interface Props {
   title: string;
   description: string;
   surface: 'wine' | 'paper';
+  current?: 'home' | 'contact';
 }
 
-const { title, description, surface } = Astro.props;
+const { title, description, surface, current } = Astro.props;
+const settings = await loadSettings();
+const canonical = canonicalUrl(Astro.url.pathname, Astro.site);
+const ogImage = new URL('/og.png', canonical).href;
+const host = new URL(canonical).host;
 ---
 <!doctype html>
 <html lang="en">
@@ -22,11 +33,28 @@ const { title, description, surface } = Astro.props;
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    <link rel="preload" href={frauncesUrl} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={newsreaderUrl} as="font" type="font/woff2" crossorigin />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.png" type="image/png" sizes="32x32" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={settings.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta name="twitter:card" content="summary_large_image" />
   </head>
   <body class={surface}>
     <a class="skip meta" href="#main">Skip to content</a>
+    <p class="print-head meta">{settings.name} · {host}</p>
+    <Nav name={settings.name} current={current} band={surface === 'paper'} />
     <main id="main">
       <slot />
     </main>
+    <Footer name={settings.name} />
   </body>
 </html>

@@ -1,0 +1,53 @@
+---
+interface Props {
+  name: string;
+  current?: 'home' | 'contact';
+  band?: boolean;
+}
+
+const { name, current, band = false } = Astro.props;
+
+const links = [
+  { key: 'home', href: '/', label: 'Home' },
+  { key: 'contact', href: '/contact/', label: 'Contact me' },
+] as const;
+---
+<header class:list={['nav', { band }]}>
+  <div class="wrap bar">
+    <a class="brand display" href="/">{name}</a>
+    <nav aria-label="Site">
+      {links.map((link) => (
+        <a class="meta" href={link.href} aria-current={current === link.key ? 'page' : undefined}>{link.label}</a>
+      ))}
+    </nav>
+  </div>
+</header>
+
+<style>
+  .nav { padding-top: 32px; }
+  .nav.band {
+    background: var(--wine);
+    color: var(--ink);
+    padding: 32px 0;
+    --text: var(--ink);
+    --muted: var(--meta);
+    --link: var(--rose);
+  }
+  .bar { display: flex; justify-content: space-between; align-items: baseline; gap: 24px; }
+  .brand { font-size: 22px; font-weight: 500; color: var(--text); text-decoration: none; }
+  nav { display: flex; gap: 28px; }
+  nav a { font-size: 14px; color: var(--muted); text-decoration: none; padding: 12px 0; }
+  nav a[aria-current='page'] {
+    color: var(--text);
+    text-decoration: underline;
+    text-decoration-color: var(--rose);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+  }
+  @media (max-width: 639px) {
+    .nav { padding-top: 24px; }
+    .brand { font-size: 20px; }
+    nav { gap: 18px; }
+    nav a { font-size: 13px; }
+  }
+</style>

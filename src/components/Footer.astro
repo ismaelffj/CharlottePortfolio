@@ -1,0 +1,33 @@
+---
+interface Props {
+  name: string;
+}
+
+const { name } = Astro.props;
+const year = new Date().getFullYear();
+---
+<footer class="footer">
+  <div class="wrap bar">
+    <span class="brand display">{name}</span>
+    <p class="meta small"><a href="/contact/">Contact me</a> · © {year} {name}</p>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    background: var(--green);
+    color: var(--meta);
+    padding: 40px 0;
+    box-shadow: inset 0 1px 0 var(--keyline-strong);
+    --text: var(--ink);
+    --muted: var(--meta);
+    --link: var(--rose);
+  }
+  .bar { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+  .brand { font-size: 18px; font-weight: 400; color: var(--text); }
+  .small { font-size: 13px; }
+  @media (max-width: 639px) {
+    .footer { padding: 32px 0; }
+    .bar { flex-direction: column; align-items: flex-start; }
+  }
+</style>
