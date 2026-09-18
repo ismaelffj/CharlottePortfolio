@@ -9,14 +9,6 @@ created: 2026-09-18
 
 ## Backlog
 
-- [ ] Phase 1: skeleton and admin !P0 owner:Agent phase:1 ^p1sk
-    Plan: documentation/plans/2026-09-18-portfolio-site.md, tasks 1 to 6. Ends with a working production admin so Charlotte can start entering content.
-    - [ ] Task 1: project scaffold
-    - [ ] Task 2: tokens, base styles, fonts, layout shell
-    - [ ] Task 3: Keystatic content model
-    - [ ] Task 4: seed content
-    - [ ] Task 5: tolerant schemas and Astro collections
-    - [ ] Task 6: first deploy and Keystatic Cloud (Dev does the accounts)
 - [ ] Phase 2: home page !P0 owner:Agent phase:2 ^p2hm
     Plan tasks 7 to 12: library helpers, nav, footer, layout head, then the home page.
     - [ ] Task 7: dates and text helpers
@@ -43,6 +35,15 @@ created: 2026-09-18
 ## In Progress
 
 ## Review
+
+- [ ] Phase 1: skeleton and admin !P0 owner:Dev phase:1 ^p1sk
+    Plan: documentation/plans/2026-09-18-portfolio-site.md, tasks 1 to 6. Code done on branch worktree-build-site; waiting on the dev-server checks and the Vercel and Keystatic Cloud accounts.
+    - [x] Task 1: project scaffold
+    - [x] Task 2: tokens, base styles, fonts, layout shell
+    - [x] Task 3: Keystatic content model
+    - [x] Task 4: seed content
+    - [x] Task 5: tolerant schemas and Astro collections
+    - [ ] Task 6: first deploy and Keystatic Cloud (Dev does the accounts)
 
 ## Done
 
