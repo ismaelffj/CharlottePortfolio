@@ -1,9 +1,29 @@
 ---
 import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
+import Row from '../components/Row.astro';
+import PillLink from '../components/PillLink.astro';
+import CategorySection from '../components/CategorySection.astro';
+import { loadHome, loadSections, loadSettings } from '../lib/content';
+import { renderInline } from '../lib/markdoc';
+import { pageTitle } from '../lib/site';
+
+const [home, sections, settings] = await Promise.all([loadHome(), loadSections(), loadSettings()]);
 ---
-<Base title="Charlotte Rose" description="Writing portfolio" surface="wine" current="home">
-  <div class="wrap">
-    <h1 class="display">Charlotte Rose</h1>
-    <p>Placeholder home page.</p>
+<Base title={pageTitle(settings)} description={settings.description} surface="wine" current="home">
+  <Hero statement={home.statement} portrait={home.portrait} alt={home.portraitAlt} />
+  <Row label="Introduction">
+    <Fragment set:html={renderInline(home.introduction)} />
+  </Row>
+  <Row label="Experience">
+    <Fragment set:html={renderInline(home.experience)} />
+    <PillLink href="/contact/" label={home.buttonLabel} />
+  </Row>
+  <div class="sections">
+    {sections.map((section) => <CategorySection section={section} />)}
   </div>
 </Base>
+
+<style>
+  .sections { padding-bottom: 56px; }
+</style>

@@ -1,0 +1,28 @@
+---
+interface Props {
+  href: string;
+  label: string;
+}
+
+const { href, label } = Astro.props;
+---
+<a class="pill meta" href={href}>{label}</a>
+
+<style>
+  .pill {
+    display: inline-block;
+    margin-top: 8px;
+    font-size: 13px;
+    line-height: 20px;
+    font-weight: 500;
+    color: var(--ink);
+    background: var(--green);
+    box-shadow: inset 0 0 0 1px var(--keyline-strong);
+    border-radius: 999px;
+    padding: 12px 20px;
+    text-decoration: none;
+    transition: background-color var(--transition);
+  }
+  .pill:hover { background: var(--green-hover); }
+  .pill:focus-visible { outline: 2px solid var(--rose); outline-offset: 2px; }
+</style>
