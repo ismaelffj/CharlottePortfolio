@@ -1,0 +1,19 @@
+---
+import Base from '../layouts/Base.astro';
+import { loadSettings } from '../lib/content';
+import { pageTitle } from '../lib/site';
+
+const settings = await loadSettings();
+---
+<Base title={pageTitle(settings, 'Not found')} description={settings.description} surface="wine">
+  <section class="wrap missing">
+    <p class="line display">There is nothing at this address.</p>
+    <p class="meta back-home"><a href="/">Back to the writing</a></p>
+  </section>
+</Base>
+
+<style>
+  .missing { padding: 128px 0; }
+  .line { font-size: 30px; line-height: 1.2; font-weight: 400; margin-bottom: 16px; }
+  .back-home { font-size: 14px; }
+</style>

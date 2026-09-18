@@ -1,0 +1,43 @@
+---
+import Base from '../layouts/Base.astro';
+import Row from '../components/Row.astro';
+import { loadContact, loadSettings } from '../lib/content';
+import { renderInline } from '../lib/markdoc';
+import { pageTitle } from '../lib/site';
+import { smartQuotes } from '../lib/text';
+
+const [contact, settings] = await Promise.all([loadContact(), loadSettings()]);
+const links = contact.links.filter((link) => link.url.trim());
+const display = (url: string) => url.trim().replace(/^https?:\/\//, '').replace(/\/$/, '');
+---
+<Base title={pageTitle(settings, 'Contact')} description={settings.description} surface="wine" current="contact">
+  <section class="wrap">
+    <h1 class="heading display">{smartQuotes(contact.heading)}</h1>
+    {contact.intro.trim() && (
+      <div class="intro">
+        <Fragment set:html={renderInline(contact.intro)} />
+      </div>
+    )}
+  </section>
+  <Row label="Email">
+    <a href={`mailto:${contact.email.trim()}`}>{contact.email.trim()}</a>
+  </Row>
+  {links.map((link) => (
+    <Row label={link.label.trim() || 'Link'}>
+      <a href={link.url.trim()} rel="noopener">{display(link.url)}</a>
+    </Row>
+  ))}
+  <div class="tail"></div>
+</Base>
+
+<style>
+  .heading { font-size: 44px; line-height: 1.1; font-weight: 340; margin: 64px 0 24px; text-wrap: balance; }
+  .intro { max-width: 640px; font-size: 21px; line-height: 1.55; font-weight: 450; margin-bottom: 40px; }
+  .intro :global(p + p) { margin-top: 12px; }
+  .tail { height: 96px; }
+  @media (max-width: 639px) {
+    .heading { font-size: 34px; margin: 44px 0 20px; }
+    .intro { font-size: 18px; line-height: 1.5; margin-bottom: 28px; }
+    .tail { height: 64px; }
+  }
+</style>
