@@ -38,8 +38,7 @@ const optionalText = (label: string, description?: string) =>
 
 export default config({
   storage: import.meta.env.DEV ? { kind: 'local' } : { kind: 'cloud' },
-  // The project slug is assigned when the Keystatic Cloud project is created (Task 6).
-  cloud: { project: 'charlotte-rose/portfolio' },
+  cloud: { project: 'dreamwell/charlotte-portfolio' },
   ui: {
     brand: { name: 'Charlotte Rose' },
     navigation: {
