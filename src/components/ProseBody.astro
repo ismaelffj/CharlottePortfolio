@@ -1,0 +1,19 @@
+---
+interface Props {
+  html: string;
+}
+
+const { html } = Astro.props;
+---
+<div class="prose" set:html={html} />
+
+<style>
+  .prose { font-size: 20px; line-height: 1.6; }
+  .prose :global(p) { margin: 0 0 26px; }
+  .prose :global(h2) { font-family: var(--font-display); font-size: 28px; line-height: 1.2; font-weight: 400; margin: 40px 0 16px; }
+  .prose :global(h3) { font-family: var(--font-display); font-size: 22px; line-height: 1.25; font-weight: 400; margin: 32px 0 12px; }
+  .prose :global(blockquote) { margin: 0 0 26px; padding-left: 20px; border-left: 1px solid var(--line); font-style: italic; }
+  .prose :global(ul), .prose :global(ol) { margin: 0 0 26px; padding-left: 24px; }
+  .prose :global(li + li) { margin-top: 8px; }
+  .prose :global(hr) { border: 0; border-top: 1px solid var(--line); margin: 40px 0; }
+</style>

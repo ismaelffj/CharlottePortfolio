@@ -1,0 +1,23 @@
+---
+interface Props {
+  abstract: string;
+  pdf: string;
+}
+
+const { abstract, pdf } = Astro.props;
+---
+<div class="paper">
+  <h2 class="heading display">Abstract</h2>
+  <p class="abstract">{abstract}</p>
+  {pdf && (
+    <p class="download">
+      <a href={pdf} target="_blank" rel="noopener">Read the full paper (PDF)</a>
+    </p>
+  )}
+</div>
+
+<style>
+  .heading { font-size: 24px; line-height: 1.2; font-weight: 400; margin-bottom: 16px; }
+  .abstract { font-size: 20px; line-height: 1.6; white-space: pre-line; margin-bottom: 26px; }
+  .download { font-size: 20px; }
+</style>

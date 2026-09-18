@@ -1,0 +1,36 @@
+---
+import type { MetaLine } from '../lib/captions';
+
+interface Props {
+  label: string;
+  title: string;
+  dek: string;
+  meta: MetaLine;
+}
+
+const { label, title, dek, meta } = Astro.props;
+---
+<header class="head">
+  <p class="label meta">{label}</p>
+  <h1 class="title display">{title}</h1>
+  {dek && <p class="dek">{dek}</p>}
+  <p class="line meta">{meta.published && <Fragment>Originally published in {meta.published.href ? <a href={meta.published.href} rel="noopener">{meta.published.label}</a> : <span>{meta.published.label}</span>}{meta.items.length > 0 && ' · '}</Fragment>}{meta.items.join(' · ')}</p>
+</header>
+
+<style>
+  .label { font-size: 12px; letter-spacing: 0.06em; color: var(--muted); margin-bottom: 18px; }
+  .title {
+    font-size: 44px;
+    line-height: 1.1;
+    font-weight: 300;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+    margin-bottom: 18px;
+  }
+  .dek { font-style: italic; font-size: 22px; line-height: 1.35; color: var(--paper-text); margin-bottom: 26px; }
+  .line { font-size: 13px; color: var(--muted); padding-bottom: 26px; border-bottom: 1px solid var(--line); }
+  @media (max-width: 639px) {
+    .title { font-size: 34px; line-height: 1.12; }
+    .dek { font-size: 20px; line-height: 1.4; }
+  }
+</style>

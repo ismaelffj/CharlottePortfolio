@@ -1,0 +1,25 @@
+---
+import type { Poem } from '../lib/pieces';
+
+interface Props {
+  poems: Poem[];
+}
+
+const { poems } = Astro.props;
+---
+<div class="verse">
+  {poems.map((poem) => (
+    <section class="poem">
+      {poem.title && <h2 class="poem-title display">{poem.title}</h2>}
+      <p class="lines">{poem.verse}</p>
+    </section>
+  ))}
+</div>
+
+<style>
+  .verse { max-width: 480px; }
+  .poem + .poem { margin-top: 48px; }
+  .poem-title { font-size: 28px; line-height: 1.2; font-weight: 400; margin-bottom: 16px; }
+  .lines { font-size: 20px; line-height: 1.6; white-space: pre-line; }
+  @media (max-width: 639px) { .verse { max-width: none; } }
+</style>

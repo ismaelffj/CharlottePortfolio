@@ -1,0 +1,51 @@
+---
+import Base from '../../layouts/Base.astro';
+import PieceHeader from '../../components/PieceHeader.astro';
+import EditorsNote from '../../components/EditorsNote.astro';
+import ProseBody from '../../components/ProseBody.astro';
+import VerseBody from '../../components/VerseBody.astro';
+import PaperBody from '../../components/PaperBody.astro';
+import { loadCategories, loadPieces, loadSettings } from '../../lib/content';
+import { backLink, pieceLabel, pieceMetaLine } from '../../lib/captions';
+import { renderInline } from '../../lib/markdoc';
+import type { Piece } from '../../lib/pieces';
+import { pageTitle } from '../../lib/site';
+import { excerpt } from '../../lib/text';
+
+export async function getStaticPaths() {
+  const pieces = await loadPieces();
+  return pieces.map((piece) => ({ params: { slug: piece.slug }, props: { piece } }));
+}
+
+interface Props {
+  piece: Piece;
+}
+
+const { piece } = Astro.props;
+const [categories, settings] = await Promise.all([loadCategories(), loadSettings()]);
+const category = categories.find((c) => c.slug === piece.categorySlug);
+const meta = pieceMetaLine(piece);
+const back = backLink(category);
+const description = piece.dek || excerpt(piece.plainText);
+---
+<Base title={pageTitle(settings, piece.title)} description={description} surface="paper">
+  <div class="wrap">
+    <article class="article">
+      <PieceHeader label={pieceLabel(category)} title={piece.title} dek={piece.dek} meta={meta} />
+      {piece.editorsNote && <EditorsNote text={piece.editorsNote} />}
+      <div class="body">
+        {piece.kind === 'prose' && <ProseBody html={renderInline(piece.body)} />}
+        {piece.kind === 'poem' && <VerseBody poems={piece.poems} />}
+        {piece.kind === 'paper' && <PaperBody abstract={piece.abstract} pdf={piece.pdf} />}
+      </div>
+      <p class="back meta"><a href={back.href}>{back.label}</a></p>
+    </article>
+  </div>
+</Base>
+
+<style>
+  .article { max-width: 620px; margin: 0 auto; padding: 88px 0 128px; hanging-punctuation: first; }
+  .body { padding-top: 36px; }
+  .back { margin-top: 64px; font-size: 13px; }
+  @media (max-width: 639px) { .article { padding: 48px 0 96px; } }
+</style>
