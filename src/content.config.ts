@@ -17,7 +17,7 @@ const single = (name: string) => glob({ pattern: `${name}/index.yaml`, base: './
 // Astro resolves image files after parsing, outside this schema.
 const tolerantImage = (image: SchemaContext['image'], field: string) =>
   z.preprocess(relativeImagePath, image().nullable()).catch((ctx) => {
-    console.warn(`[content] ${field}: ${ctx.issues.map((issue) => issue.message).join('; ')}. Rendering without it.`);
+    console.warn(`[content] ${field}: ${ctx.issues.map((issue) => issue.message ?? issue.code).join('; ')}. Rendering without it.`);
     return null;
   });
 

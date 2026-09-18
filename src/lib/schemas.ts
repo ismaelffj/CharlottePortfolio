@@ -4,10 +4,13 @@ import { z } from 'astro/zod';
 // fallback instead of failing the build, because Charlotte gets no signal when
 // a deploy fails. Hard failures are reserved for code errors.
 
-const describe = (issues: ReadonlyArray<{ message: string }>) => issues.map((issue) => issue.message).join('; ');
+type Issue = { message?: string; code?: string };
+
+const describe = (issues: ReadonlyArray<Issue>) =>
+  issues.map((issue) => issue.message ?? issue.code ?? 'invalid value').join('; ');
 
 /** Logged when a value is present but unusable; a missing optional string is normal and stays silent. */
-const warn = (field: string, issues: ReadonlyArray<{ message: string }>) =>
+const warn = (field: string, issues: ReadonlyArray<Issue>) =>
   console.warn(`[content] ${field}: ${describe(issues)}; using a fallback.`);
 
 export const str = (fallback = '') =>
