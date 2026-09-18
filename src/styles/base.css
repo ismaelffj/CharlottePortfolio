@@ -1,0 +1,92 @@
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  font-optical-sizing: auto;
+  font-weight: 400;
+  line-height: 1.55;
+}
+
+h1, h2, h3, p, ul, ol, figure, blockquote { margin: 0; }
+ul, ol { padding: 0; }
+img { display: block; max-width: 100%; height: auto; }
+
+/* Surfaces: each sets the four surface-relative variables components use. */
+body.wine {
+  background: var(--wine);
+  color: var(--ink);
+  --text: var(--ink);
+  --muted: var(--meta);
+  --link: var(--rose);
+  --line: var(--rule);
+  -webkit-font-smoothing: antialiased;
+}
+
+body.paper {
+  background: var(--paper);
+  color: var(--paper-ink);
+  --text: var(--paper-ink);
+  --muted: var(--paper-meta);
+  --link: var(--paper-link);
+  --line: var(--paper-rule);
+}
+
+/* Families */
+.display { font-family: var(--font-display); font-optical-sizing: auto; }
+.meta { font-family: var(--font-meta); }
+
+/* Measure */
+.wrap { max-width: var(--content-width); margin: 0 auto; padding: 0 var(--gutter); }
+
+/* Links: always underlined, color never the only signal. */
+a {
+  color: var(--link);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  text-decoration-skip-ink: auto;
+  text-decoration-color: color-mix(in srgb, var(--link) 50%, transparent);
+  transition: text-decoration-color var(--transition);
+}
+a:hover { text-decoration-color: var(--link); }
+
+:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
+
+/* Accessibility helpers */
+.skip {
+  position: absolute;
+  left: 16px;
+  top: -200px;
+  padding: 8px 12px;
+  background: var(--paper);
+  color: var(--paper-ink);
+  z-index: 10;
+}
+.skip:focus { top: 16px; }
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.print-head { display: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; }
+}
+
+/* Print: white page, dark ink, running head, no chrome. */
+@media print {
+  body, body.paper, body.wine { background: #fff; color: var(--paper-ink); }
+  .nav, .footer, .skip, .back, .pill { display: none !important; }
+  .print-head { display: block; font-size: 10px; color: #666; margin: 0 0 24px; }
+  a { color: inherit; text-decoration: none; }
+  a[href^="http"]::after { content: " (" attr(href) ")"; font-size: 0.85em; }
+}
