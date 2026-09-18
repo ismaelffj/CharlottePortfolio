@@ -1,0 +1,13 @@
+columns:
+  - { name: Backlog, color: clay, started: false }
+  - { name: In Progress, color: amber }
+  - { name: Review, color: teal }
+  - { name: Done, color: sage, done: true }
+fields:
+  priority: { type: select, pinned: true }
+  due: { type: date, pinned: true }
+  owner: { type: select, pinned: true, options: { Agent: mauve, Dev: amber } }
+  labels: { type: multiselect, options: { llm: clay, slack: teal, perf: amber } }
+  phase: { type: select }
+  sprint: { type: select }
+  points: { type: number, enabled: false }
