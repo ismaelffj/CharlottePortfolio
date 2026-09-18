@@ -1,0 +1,17 @@
+title: A draft essay
+kind:
+  discriminant: prose
+  value:
+    outlet:
+      name: ''
+      url: ''
+    body: |
+      This draft is not published and must never appear on the site.
+category: essays
+date: 2025-08-01
+published: false
+dek: ''
+image: ''
+imageAlt: ''
+openingLines: ''
+editorsNote: ''
