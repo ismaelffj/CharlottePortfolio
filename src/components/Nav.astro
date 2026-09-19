@@ -30,17 +30,18 @@ const links = [
     color: var(--ink);
     padding: 32px 0;
     --text: var(--ink);
-    --muted: var(--meta);
     --link: var(--rose);
   }
   .bar { display: flex; justify-content: space-between; align-items: baseline; gap: 24px; }
+  /* On wine pages the header shares the body surface; the same hairline as the rows is its only edge. */
+  .nav:not(.band) .bar { border-bottom: 1px solid var(--line); }
   .brand { font-size: 22px; font-weight: 500; color: var(--text); text-decoration: none; }
   nav { display: flex; gap: 28px; }
-  nav a { font-size: 14px; color: var(--muted); text-decoration: none; padding: 12px 0; }
+  nav a { font-size: 14px; color: var(--link); text-decoration: none; padding: 12px 0; }
   nav a[aria-current='page'] {
     color: var(--text);
     text-decoration: underline;
-    text-decoration-color: var(--rose);
+    text-decoration-color: var(--text);
     text-decoration-thickness: 1px;
     text-underline-offset: 3px;
   }
