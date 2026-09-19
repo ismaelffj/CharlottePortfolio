@@ -1,0 +1,23 @@
+title: "The last public phone in Harlan"
+kind:
+  discriminant: prose
+  value:
+    outlet:
+      name: "The Daily"
+      url: "https://example.com/the-daily/last-public-phone"
+    body: |-
+      The booth stands where the pharmacy used to be, its glass replaced twice and its directory gone for a decade. It takes quarters. It gives a dial tone. On the first Tuesday of every month a woman from the phone company comes to empty it, and every month there is something to empty.
+
+      I sat with it for three afternoons. Eleven people used it. Two of them had cell phones in their pockets and used the booth anyway, because the number they were calling knew the booth’s number and would pick up.
+
+      “It’s the only phone in town that doesn’t know who you are,” one of them said, which is the kind of sentence you drive four hours to hear.
+
+      The bill is forty-one dollars a month. The county stopped paying it in 2019. Somebody else started. The phone company would not say who, and after a while I stopped asking, because the answer was the least interesting thing about it.
+category: articles
+date: 2024-11-02
+published: true
+dek: "A booth outside a shuttered pharmacy still takes quarters. Somebody keeps paying the bill."
+image: "image.jpg"
+imageAlt: "Placeholder artwork."
+openingLines: ""
+editorsNote: "A small story I was told nobody would read. It ran on the front page and drew more letters than anything I had written."
