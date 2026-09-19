@@ -13,13 +13,15 @@ const links = [
 ] as const;
 ---
 <header class:list={['nav', { band }]}>
-  <div class="wrap bar">
-    <a class="brand display" href="/">{name}</a>
-    <nav aria-label="Site">
-      {links.map((link) => (
-        <a class="meta" href={link.href} aria-current={current === link.key ? 'page' : undefined}>{link.label}</a>
-      ))}
-    </nav>
+  <div class="wrap">
+    <div class="bar">
+      <a class="brand display" href="/">{name}</a>
+      <nav aria-label="Site">
+        {links.map((link) => (
+          <a class="meta" href={link.href} aria-current={current === link.key ? 'page' : undefined}>{link.label}</a>
+        ))}
+      </nav>
+    </div>
   </div>
 </header>
 
