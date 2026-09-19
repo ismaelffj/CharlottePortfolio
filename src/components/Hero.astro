@@ -16,7 +16,7 @@ const { statement, portrait, alt } = Astro.props;
     <h1 class="statement display">{smartQuotes(statement)}</h1>
     {portrait && (
       <div class="portrait">
-        <Image src={portrait} alt={alt} width={400} densities={[1, 2]} priority />
+        <Image src={portrait} alt={alt} width={320} densities={[1, 2]} priority />
       </div>
     )}
   </div>
@@ -25,19 +25,19 @@ const { statement, portrait, alt } = Astro.props;
 <style>
   .hero {
     display: grid;
-    grid-template-columns: 1fr 400px;
-    gap: 80px;
+    grid-template-columns: 1fr 320px;
+    gap: 64px;
     align-items: center;
-    margin: 64px 0 96px;
+    margin: 48px 0 72px;
   }
   .statement {
-    font-size: 56px;
-    line-height: 1.08;
+    font-size: 44px;
+    line-height: 1.1;
     font-weight: 340;
     letter-spacing: 0;
     text-wrap: balance;
     hanging-punctuation: first;
-    max-width: 640px;
+    max-width: 600px;
   }
   .portrait { position: relative; aspect-ratio: 4 / 5; overflow: hidden; }
   .portrait :global(img) { width: 100%; height: 100%; object-fit: cover; }
@@ -49,16 +49,16 @@ const { statement, portrait, alt } = Astro.props;
     pointer-events: none;
   }
   @media (max-width: 1023px) {
-    .hero { grid-template-columns: 1fr 300px; gap: 48px; }
-    .statement { font-size: 44px; }
+    .hero { grid-template-columns: 1fr 260px; gap: 40px; }
+    .statement { font-size: 36px; }
   }
   @media (max-width: 899px) {
-    .hero { grid-template-columns: 1fr; gap: 32px; margin: 48px 0 64px; }
-    .portrait { max-width: 400px; }
+    .hero { grid-template-columns: 1fr; gap: 28px; margin: 40px 0 48px; }
+    .portrait { max-width: 320px; }
   }
   @media (max-width: 639px) {
-    .hero { gap: 28px; margin: 44px 0 56px; }
-    .statement { font-size: 36px; line-height: 1.1; }
-    .portrait { max-width: none; }
+    .hero { gap: 24px; margin: 32px 0 40px; }
+    .statement { font-size: 30px; line-height: 1.12; }
+    .portrait { max-width: 280px; }
   }
 </style>
