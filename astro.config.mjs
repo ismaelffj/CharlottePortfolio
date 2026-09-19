@@ -12,6 +12,8 @@ const productionUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL
 export default defineConfig({
   site: productionUrl ?? 'http://localhost:4877',
   output: 'static',
+  // The stylesheets are a few KiB; inlining them removes two render-blocking requests before first paint.
+  build: { inlineStylesheets: 'always' },
   adapter: vercel(),
   integrations: [react(), markdoc(), keystatic(), sitemap()],
   server: { port: 4877 },
