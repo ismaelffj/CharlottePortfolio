@@ -31,6 +31,7 @@ const description = piece.dek || excerpt(piece.plainText);
 <Base title={pageTitle(settings, piece.title)} description={description} surface="paper">
   <div class="wrap">
     <article class="article">
+      <p class="back-top meta"><a href={back.href}>← Back to list</a></p>
       <PieceHeader label={pieceLabel(category)} title={piece.title} dek={piece.dek} meta={meta} />
       {piece.editorsNote && <EditorsNote text={piece.editorsNote} />}
       <div class="body">
@@ -45,6 +46,7 @@ const description = piece.dek || excerpt(piece.plainText);
 
 <style>
   .article { max-width: 620px; margin: 0 auto; padding: 88px 0 128px; hanging-punctuation: first; }
+  .back-top { margin-bottom: 32px; font-size: 13px; }
   .body { padding-top: 36px; }
   .back { margin-top: 64px; font-size: 13px; }
   @media (max-width: 639px) { .article { padding: 48px 0 96px; } }
