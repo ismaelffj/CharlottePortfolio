@@ -10,7 +10,7 @@ const productionUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL
   : undefined;
 
 export default defineConfig({
-  site: process.env.PUBLIC_SITE_URL ?? productionUrl ?? 'http://localhost:4877',
+  site: productionUrl ?? 'http://localhost:4877',
   output: 'static',
   adapter: vercel(),
   integrations: [react(), markdoc(), keystatic(), sitemap()],
