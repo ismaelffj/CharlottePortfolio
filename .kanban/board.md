@@ -10,9 +10,14 @@ created: 2026-09-18
 ## Backlog
 
 - [ ] Phase 6: handoff !P1 owner:Dev phase:6 ^p6ho
-    Plan tasks 17 and 18. The guide is written (local, in documentation/); the domain is linked in Vercel.
+    Plan tasks 17 and 18. The guide is written (local, in documentation/).
     - [x] Task 17: editing guide
-    - [ ] Task 18: domain, acceptance checklist, walkthrough with Charlotte
+    - [x] Domain: charlotterosewrites.com on Production, www folds into it with a 308, canonical and sitemap on the bare domain, no env var needed
+    - [x] Acceptance 1, 4, 5, 7, 8, 9, 10 and the local form of 12 checked against the build (scripts in the session scratchpad): order, tile fallbacks, drafts, poem breaks, papers, contact, no overflow at 375px on all 21 pages, a piece builds without a dek line or a date line
+    - [ ] Acceptance 2, 3, 6 (admin edits on production), 11 (print preview), 12 on GitHub, 13 (Lighthouse recorded), 14 (Charlotte's first piece)
+    - [ ] Clear the placeholders (keep three unpublished templates) when Charlotte is ready
+    - [ ] Walkthrough with Charlotte
+    > 2026-09-19 — Domain and the build-verifiable acceptance items done; the rest waits on admin sessions and on Charlotte.
 
 ## In Progress
 
