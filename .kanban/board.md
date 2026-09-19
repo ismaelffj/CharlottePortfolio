@@ -9,9 +9,6 @@ created: 2026-09-18
 
 ## Backlog
 
-- [ ] Phase 5: quality pass !P1 owner:Dev phase:5 ^p5qa
-    Plan task 16: types, tests, Lighthouse on production, keyboard and motion, admin round trip.
-    - [ ] Task 16: quality pass
 - [ ] Phase 6: handoff !P1 owner:Dev phase:6 ^p6ho
     Plan tasks 17 and 18. The guide is written (local, in documentation/); the domain is linked in Vercel.
     - [x] Task 17: editing guide
@@ -19,6 +16,12 @@ created: 2026-09-18
 
 ## In Progress
 
+- [ ] Phase 5: quality pass !P1 owner:Dev phase:5 ^p5qa
+    Plan task 16: types, tests, Lighthouse on production, keyboard and motion, admin round trip.
+    - [x] Types and tests clean; Lighthouse run locally: Home 93, piece 98, accessibility 100 (spec section 7 has the detail)
+    - [ ] Keyboard and reduced-motion check
+    - [ ] Admin round trip: add a category and a poem, delete the category, delete the poem
+    > 2026-09-19 — Stylesheets inlined and Newsreader moved to its weight-only build after the first Lighthouse runs (85 and 92); Home stays at 93 because the remaining levers are design changes, declined.
 ## Review
 
 ## Done
