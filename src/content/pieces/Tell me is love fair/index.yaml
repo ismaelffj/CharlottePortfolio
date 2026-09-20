@@ -3,8 +3,7 @@ kind:
   discriminant: poem
   value:
     poems:
-      - title: Tell me is love fair
-        verse: |-
+      - verse: |-
           Tell me is love fair 
 
           I saw you standing there
@@ -131,6 +130,5 @@ kind:
 category: poems
 date: 2025-07-13
 published: true
-dek: Tell me is love fair
 image: image.JPG
 imageAlt: Placeholder artwork.
