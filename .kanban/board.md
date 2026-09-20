@@ -29,6 +29,10 @@ created: 2026-09-18
     > 2026-09-19 — Stylesheets inlined and Newsreader moved to its weight-only build after the first Lighthouse runs (85 and 92); Home stays at 93 because the remaining levers are design changes, declined.
 ## Review
 
+- [ ] Hidden flag on categories owner:Agent ^chid
+    A Hidden checkbox on each category takes it and its pieces off the site (Home, piece pages, sitemap) without deleting anything; existing category files need no change. Waiting on the push and a check in the production admin.
+    > 2026-09-20 — Tests, astro check, and a build over Charlotte's content with Speeches hidden all pass; guide and spec updated.
+
 ## Done
 
 - [x] Phase 1: skeleton and admin !P0 owner:Agent phase:1 ^p1sk
