@@ -106,6 +106,7 @@ export default config({
       slugField: 'name',
       path: 'src/content/categories/*/',
       format: { data: 'yaml' },
+      columns: ['order', 'hidden'],
       schema: {
         name: fields.slug({
           name: { label: 'Name' },
@@ -117,6 +118,11 @@ export default config({
             'Lower numbers appear first on the home page. Deleting a category does not delete its pieces; they move to an Uncategorized section until you give them a new category.',
           defaultValue: 1,
           validation: { isRequired: true },
+        }),
+        hidden: fields.checkbox({
+          label: 'Hidden',
+          defaultValue: false,
+          description: 'Takes this category and all of its pieces off the site until you untick it. Nothing is deleted.',
         }),
       },
     }),

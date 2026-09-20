@@ -39,6 +39,7 @@ export interface Category {
   slug: string;
   name: string;
   order: number;
+  hidden: boolean;
 }
 
 export interface Section {
@@ -111,7 +112,7 @@ export function normalizePiece(slug: string, data: PieceInput): Piece {
 }
 
 export function normalizeCategory(slug: string, data: CategoryData): Category {
-  return { slug, name: data.name, order: data.order };
+  return { slug, name: data.name, order: data.order, hidden: data.hidden };
 }
 
 export function publishedSorted(pieces: Piece[]): Piece[] {
@@ -122,6 +123,12 @@ export function publishedSorted(pieces: Piece[]): Piece[] {
 
 export function sortCategories(categories: Category[]): Category[] {
   return [...categories].sort((a, b) => a.order - b.order || a.name.localeCompare(b.name));
+}
+
+/** Drops the pieces of hidden categories; pieces of a deleted category stay so they can surface as Uncategorized. */
+export function withoutHiddenCategories(pieces: Piece[], categories: Category[]): Piece[] {
+  const hidden = new Set(categories.filter((c) => c.hidden).map((c) => c.slug));
+  return pieces.filter((p) => !hidden.has(p.categorySlug));
 }
 
 /** Groups already-filtered pieces into sections in category order; orphans go last. */

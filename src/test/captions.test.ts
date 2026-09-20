@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { pieceBaseSchema } from '../lib/schemas';
+import { categorySchema, pieceBaseSchema } from '../lib/schemas';
 import { normalizeCategory, normalizePiece } from '../lib/pieces';
 import { backLink, captionMeta, hostnameOf, outletLabel, pieceLabel, pieceMetaLine } from '../lib/captions';
 
@@ -61,7 +61,7 @@ describe('pieceMetaLine', () => {
 });
 
 describe('labels and links', () => {
-  const poetry = normalizeCategory('poetry', { name: 'Poetry', order: 4 });
+  const poetry = normalizeCategory('poetry', categorySchema.parse({ name: 'Poetry', order: 4 }));
 
   it('labels a piece with its category name, or Writing when orphaned', () => {
     expect(pieceLabel(poetry)).toBe('Poetry');

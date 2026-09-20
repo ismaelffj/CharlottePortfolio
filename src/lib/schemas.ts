@@ -21,10 +21,14 @@ export const str = (fallback = '') =>
     .catch(fallback);
 
 export const bool = (field: string, fallback = false) =>
-  z.boolean().catch((ctx) => {
-    warn(field, ctx.issues);
-    return fallback;
-  });
+  z
+    .boolean()
+    .nullish()
+    .transform((value) => value ?? fallback)
+    .catch((ctx) => {
+      warn(field, ctx.issues);
+      return fallback;
+    });
 
 export const isoDate = (field = 'date') =>
   z.coerce.date().catch((ctx) => {
@@ -43,6 +47,7 @@ export const relativeImagePath = (value: unknown): unknown => {
 export const categorySchema = z.object({
   name: str(),
   order: z.coerce.number().catch(1),
+  hidden: bool('hidden'),
 });
 export type CategoryData = z.infer<typeof categorySchema>;
 

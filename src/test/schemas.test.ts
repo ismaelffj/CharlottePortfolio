@@ -45,6 +45,11 @@ describe('pieceBaseSchema', () => {
     expect(warn).toHaveBeenCalledWith(expect.stringContaining('[content] published'));
   });
 
+  it('treats a missing published flag as unpublished without a warning', () => {
+    expect(pieceBaseSchema.parse({ title: 't', kind: { discriminant: 'prose', value: { body: '' } }, date: '2024-03-15' }).published).toBe(false);
+    expect(warn).not.toHaveBeenCalled();
+  });
+
   it('stays silent when optional fields are simply missing', () => {
     pieceBaseSchema.parse({ title: 'Only a title', kind: { discriminant: 'prose', value: { body: '' } }, date: '2024-03-15', published: true });
     expect(warn).not.toHaveBeenCalled();
@@ -86,6 +91,20 @@ describe('other schemas', () => {
   it('coerces category order and defaults it to 1', () => {
     expect(categorySchema.parse({ name: 'Poetry', order: '4' }).order).toBe(4);
     expect(categorySchema.parse({ name: 'Poetry' }).order).toBe(1);
+  });
+
+  it('keeps a category shown when its file has no hidden line, without a warning', () => {
+    expect(categorySchema.parse({ name: 'Poetry' }).hidden).toBe(false);
+    expect(warn).not.toHaveBeenCalled();
+  });
+
+  it('keeps a category shown when hidden is not a boolean, and says so', () => {
+    expect(categorySchema.parse({ name: 'Poetry', hidden: 'yes' }).hidden).toBe(false);
+    expect(warn).toHaveBeenCalledWith(expect.stringContaining('[content] hidden'));
+  });
+
+  it('hides a category whose hidden flag is on', () => {
+    expect(categorySchema.parse({ name: 'Poetry', hidden: true }).hidden).toBe(true);
   });
 
   it('defaults contact links to an empty list and the heading to Contact me', () => {

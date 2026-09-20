@@ -6,6 +6,7 @@ import {
   normalizePiece,
   publishedSorted,
   sortCategories,
+  withoutHiddenCategories,
   type Category,
   type Piece,
   type Section,
@@ -32,9 +33,11 @@ export async function loadCategories(): Promise<Category[]> {
   return sortCategories(entries.map((entry) => normalizeCategory(entry.id, entry.data)));
 }
 
+/** Every piece that belongs on the site: published, and in a category that is not hidden. */
 export async function loadPieces(): Promise<Piece[]> {
-  const entries = await getCollection('pieces');
-  return publishedSorted(entries.map((entry) => normalizePiece(entry.id, entry.data)));
+  const [entries, categories] = await Promise.all([getCollection('pieces'), loadCategories()]);
+  const pieces = entries.map((entry) => normalizePiece(entry.id, entry.data));
+  return publishedSorted(withoutHiddenCategories(pieces, categories));
 }
 
 export async function loadSections(): Promise<Section[]> {

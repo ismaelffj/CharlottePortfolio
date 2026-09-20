@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { pieceBaseSchema } from '../lib/schemas';
+import { categorySchema, pieceBaseSchema } from '../lib/schemas';
 import {
   UNCATEGORIZED,
   groupByCategory,
@@ -7,16 +7,20 @@ import {
   normalizePiece,
   publishedSorted,
   sortCategories,
+  withoutHiddenCategories,
   type Category,
 } from '../lib/pieces';
 
 const piece = (slug: string, overrides: Record<string, unknown> = {}) =>
   normalizePiece(slug, pieceBaseSchema.parse({ title: slug, published: true, ...overrides }));
 
+const category = (slug: string, overrides: Record<string, unknown> = {}) =>
+  normalizeCategory(slug, categorySchema.parse({ name: slug, ...overrides }));
+
 const categories: Category[] = [
-  normalizeCategory('poetry', { name: 'Poetry', order: 4 }),
-  normalizeCategory('articles', { name: 'Articles', order: 1 }),
-  normalizeCategory('essays', { name: 'Essays', order: 2 }),
+  category('poetry', { name: 'Poetry', order: 4 }),
+  category('articles', { name: 'Articles', order: 1 }),
+  category('essays', { name: 'Essays', order: 2 }),
 ];
 
 describe('normalizePiece', () => {
@@ -77,14 +81,35 @@ describe('publishedSorted', () => {
   });
 });
 
+describe('normalizeCategory', () => {
+  it('carries the hidden flag', () => {
+    expect(category('speeches', { hidden: true }).hidden).toBe(true);
+    expect(category('poetry').hidden).toBe(false);
+  });
+});
+
 describe('sortCategories', () => {
   it('sorts by order, then name', () => {
     const list = [
-      normalizeCategory('z', { name: 'Zeta', order: 2 }),
-      normalizeCategory('a', { name: 'Alpha', order: 2 }),
-      normalizeCategory('m', { name: 'Mid', order: 1 }),
+      category('z', { name: 'Zeta', order: 2 }),
+      category('a', { name: 'Alpha', order: 2 }),
+      category('m', { name: 'Mid', order: 1 }),
     ];
     expect(sortCategories(list).map((c) => c.slug)).toEqual(['m', 'a', 'z']);
+  });
+});
+
+describe('withoutHiddenCategories', () => {
+  const withHidden = [...categories, category('speeches', { name: 'Speeches', order: 5, hidden: true })];
+
+  it('drops the pieces of a hidden category and keeps the rest', () => {
+    const list = [piece('talk', { category: 'speeches' }), piece('poem-1', { category: 'poetry' })];
+    expect(withoutHiddenCategories(list, withHidden).map((p) => p.slug)).toEqual(['poem-1']);
+  });
+
+  it('keeps pieces whose category no longer exists, so they can still surface as Uncategorized', () => {
+    const list = [piece('orphan', { category: 'deleted' })];
+    expect(withoutHiddenCategories(list, withHidden).map((p) => p.slug)).toEqual(['orphan']);
   });
 });
 
