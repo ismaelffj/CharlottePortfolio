@@ -1,0 +1,111 @@
+---
+import { Image } from 'astro:assets';
+import type { Piece } from '../lib/pieces';
+import type { TileKind } from '../lib/tiles';
+
+type Size = 'grid' | 'featured';
+
+interface Props {
+  piece: Piece;
+  kind: TileKind;
+  categoryName: string;
+  size: Size;
+}
+
+const { piece, kind, categoryName, size } = Astro.props;
+
+// Grid tiles run four across on desktop and two across on phones; the featured square is 160px, or 112px on phones.
+const IMAGE: Record<Size, { width: number; widths: number[]; sizes: string }> = {
+  grid: {
+    width: 262,
+    widths: [262, 320, 524],
+    sizes: '(max-width: 639px) calc(50vw - 28px), (max-width: 1023px) calc(33vw - 40px), 262px',
+  },
+  featured: { width: 160, widths: [160, 320], sizes: '(max-width: 639px) 112px, 160px' },
+};
+const image = IMAGE[size];
+// The featured square is never larger than 160px, so it takes the small type at every width.
+const classes = (...kinds: string[]) => ['tile', ...kinds, { small: size === 'featured' }];
+---
+{kind === 'image' && piece.image && (
+  <div class:list={classes('image')}>
+    <Image src={piece.image} alt={piece.imageAlt} width={image.width} widths={image.widths} sizes={image.sizes} />
+  </div>
+)}
+{kind === 'paper' && (
+  <div class:list={classes('paper')}>
+    <span class="label meta">{categoryName}</span>
+    <span class="paper-title display">{piece.title}</span>
+    <span class="lines">{piece.openingLines}</span>
+  </div>
+)}
+{(kind === 'rose' || kind === 'green') && (
+  <div class:list={classes(kind)}>
+    <span class="italic display">{piece.title}</span>
+  </div>
+)}
+
+<style>
+  .tile {
+    --pad: 18px;
+    --label-gap: 10px;
+    --title-size: 22px;
+    --title-leading: 1.1;
+    --lines: -webkit-box;
+    --italic-size: 22px;
+    position: relative;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+  }
+  /* Small squares, the featured square everywhere and grid tiles on phones, tighten the paper and italic type. */
+  .tile.small {
+    --pad: 12px;
+    --label-gap: 6px;
+    --title-size: 18px;
+    --title-leading: 1.15;
+    --lines: none;
+    --italic-size: 17px;
+  }
+  .tile::after { content: ''; position: absolute; inset: 0; pointer-events: none; }
+  .tile.image::after { box-shadow: inset 0 0 0 1px var(--keyline); }
+  .tile.image :global(img) { width: 100%; height: 100%; object-fit: cover; }
+  .tile.paper { background: var(--paper); color: var(--paper-ink); padding: var(--pad); display: flex; flex-direction: column; }
+  .label { font-size: 11px; letter-spacing: 0.05em; color: var(--paper-label); margin-bottom: var(--label-gap); }
+  .paper-title { font-size: var(--title-size); line-height: var(--title-leading); font-weight: 300; margin-bottom: 12px; }
+  .lines {
+    font-size: 15px;
+    line-height: 1.4;
+    font-weight: 450;
+    color: var(--paper-text);
+    white-space: pre-line;
+    display: var(--lines);
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .tile.rose { background: var(--rose-tile); }
+  .tile.green { background: var(--green); }
+  .tile.green::after { box-shadow: inset 0 0 0 1px var(--keyline-strong); }
+  .italic {
+    position: absolute;
+    left: var(--pad);
+    right: var(--pad);
+    bottom: var(--pad);
+    font-style: italic;
+    font-weight: 340;
+    font-size: var(--italic-size);
+    line-height: 1.12;
+  }
+  .tile.rose .italic { color: var(--wine); }
+  .tile.green .italic { color: var(--rose); }
+  @media (max-width: 639px) {
+    .tile {
+      --pad: 12px;
+      --label-gap: 6px;
+      --title-size: 18px;
+      --title-leading: 1.15;
+      --lines: none;
+      --italic-size: 17px;
+    }
+  }
+</style>

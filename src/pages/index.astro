@@ -4,11 +4,14 @@ import Hero from '../components/Hero.astro';
 import Row from '../components/Row.astro';
 import PillLink from '../components/PillLink.astro';
 import CategorySection from '../components/CategorySection.astro';
+import FeaturedSection from '../components/FeaturedSection.astro';
 import { loadHome, loadSections, loadSettings } from '../lib/content';
+import { featuredEntries } from '../lib/pieces';
 import { renderInline } from '../lib/markdoc';
 import { pageTitle } from '../lib/site';
 
 const [home, sections, settings] = await Promise.all([loadHome(), loadSections(), loadSettings()]);
+const featured = featuredEntries(sections);
 ---
 <Base title={pageTitle(settings)} description={settings.description} surface="wine" current="home">
   <Hero statement={home.statement} portrait={home.portrait} alt={home.portraitAlt} />
@@ -20,6 +23,7 @@ const [home, sections, settings] = await Promise.all([loadHome(), loadSections()
     <PillLink href="/contact/" label={home.buttonLabel} />
   </Row>
   <div class="sections">
+    {featured.length > 0 && <FeaturedSection entries={featured} />}
     {sections.map((section) => <CategorySection section={section} />)}
   </div>
 </Base>

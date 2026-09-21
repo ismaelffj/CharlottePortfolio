@@ -18,6 +18,7 @@ export interface Piece {
   categorySlug: string;
   date: Date;
   published: boolean;
+  featured: boolean;
   dek: string;
   image: ImageMetadata | null;
   imageAlt: string;
@@ -49,6 +50,12 @@ export interface Section {
   uncategorized: boolean;
 }
 
+export interface FeaturedEntry {
+  piece: Piece;
+  /** The name of the home page section the piece belongs to, since a featured card sits outside it. */
+  categoryName: string;
+}
+
 export const UNCATEGORIZED = { slug: 'uncategorized', name: 'Uncategorized' } as const;
 
 export type PieceInput = PieceData & { image?: ImageMetadata | null };
@@ -62,6 +69,7 @@ export function normalizePiece(slug: string, data: PieceInput): Piece {
     categorySlug: data.category,
     date: data.date,
     published: data.published,
+    featured: data.featured,
     dek: smartQuotes(data.dek),
     image: data.image ?? null,
     imageAlt: data.imageAlt,
@@ -115,10 +123,10 @@ export function normalizeCategory(slug: string, data: CategoryData): Category {
   return { slug, name: data.name, order: data.order, hidden: data.hidden };
 }
 
+const newestFirst = (a: Piece, b: Piece) => b.date.getTime() - a.date.getTime() || a.title.localeCompare(b.title);
+
 export function publishedSorted(pieces: Piece[]): Piece[] {
-  return pieces
-    .filter((p) => p.published)
-    .sort((a, b) => b.date.getTime() - a.date.getTime() || a.title.localeCompare(b.title));
+  return pieces.filter((p) => p.published).sort(newestFirst);
 }
 
 export function sortCategories(categories: Category[]): Category[] {
@@ -146,4 +154,11 @@ export function groupByCategory(pieces: Piece[], categories: Category[]): Sectio
     sections.push({ slug: UNCATEGORIZED.slug, name: UNCATEGORIZED.name, uncategorized: true, pieces: orphans });
   }
   return sections;
+}
+
+/** The featured pieces across every section, newest first, each with the name of its section. */
+export function featuredEntries(sections: Section[]): FeaturedEntry[] {
+  return sections
+    .flatMap((section) => section.pieces.filter((p) => p.featured).map((piece) => ({ piece, categoryName: section.name })))
+    .sort((a, b) => newestFirst(a.piece, b.piece));
 }

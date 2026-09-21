@@ -1,0 +1,35 @@
+---
+import FeaturedCard from './FeaturedCard.astro';
+import type { FeaturedEntry } from '../lib/pieces';
+import { tileKinds } from '../lib/tiles';
+
+interface Props {
+  entries: FeaturedEntry[];
+}
+
+const { entries } = Astro.props;
+const kinds = tileKinds(entries.map((entry) => entry.piece));
+---
+<div class="wrap">
+  <section class="featured" aria-labelledby="featured">
+    <h2 class="heading display" id="featured">Featured</h2>
+    <ul class="cards">
+      {entries.map((entry, index) => (
+        <li>
+          <FeaturedCard entry={entry} kind={kinds[index]} />
+        </li>
+      ))}
+    </ul>
+  </section>
+</div>
+
+<style>
+  .featured { border-top: 1px solid var(--line); padding: 40px 0 56px; }
+  .heading { font-size: 30px; line-height: 1.2; font-weight: 400; margin-bottom: 24px; scroll-margin-top: 32px; }
+  .cards { list-style: none; display: grid; gap: 32px; }
+  @media (max-width: 639px) {
+    .featured { padding: 32px 0 48px; }
+    .heading { font-size: 26px; }
+    .cards { gap: 28px; }
+  }
+</style>

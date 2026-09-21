@@ -21,6 +21,7 @@ describe('pieceBaseSchema', () => {
     expect(piece.kind).toEqual({ discriminant: 'prose', value: { outlet: { name: '', url: '' }, body: '' } });
     expect(piece.category).toBe('');
     expect(piece.published).toBe(false);
+    expect(piece.featured).toBe(false);
     expect(piece.dek).toBe('');
     expect(piece.imageAlt).toBe('');
     expect(piece.openingLines).toBe('');
@@ -48,6 +49,20 @@ describe('pieceBaseSchema', () => {
   it('treats a missing published flag as unpublished without a warning', () => {
     expect(pieceBaseSchema.parse({ title: 't', kind: { discriminant: 'prose', value: { body: '' } }, date: '2024-03-15' }).published).toBe(false);
     expect(warn).not.toHaveBeenCalled();
+  });
+
+  it('treats a missing featured flag as not featured without a warning', () => {
+    expect(pieceBaseSchema.parse({ title: 't', kind: { discriminant: 'prose', value: { body: '' } }, date: '2024-03-15' }).featured).toBe(false);
+    expect(warn).not.toHaveBeenCalled();
+  });
+
+  it('keeps a featured flag that is on', () => {
+    expect(pieceBaseSchema.parse({ title: 't', featured: true }).featured).toBe(true);
+  });
+
+  it('treats a non-boolean featured flag as not featured, and says so', () => {
+    expect(pieceBaseSchema.parse({ title: 't', featured: 'yes' }).featured).toBe(false);
+    expect(warn).toHaveBeenCalledWith(expect.stringContaining('[content] featured'));
   });
 
   it('stays silent when optional fields are simply missing', () => {

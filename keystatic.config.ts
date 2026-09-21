@@ -131,7 +131,7 @@ export default config({
       slugField: 'title',
       path: 'src/content/pieces/*/',
       format: { data: 'yaml' },
-      columns: ['category', 'date', 'published'],
+      columns: ['category', 'date', 'published', 'featured'],
       schema: {
         title: fields.slug({
           name: { label: 'Title' },
@@ -200,6 +200,11 @@ export default config({
           label: 'Published',
           defaultValue: false,
           description: 'Unpublished pieces are hidden from the site.',
+        }),
+        featured: fields.checkbox({
+          label: 'Featured',
+          defaultValue: false,
+          description: 'Shows the piece in the Featured section of the home page, above the categories. Two work best.',
         }),
         dek: optionalText('One-line description (optional)', 'Shown under the title on the piece page.'),
         image: fields.image({

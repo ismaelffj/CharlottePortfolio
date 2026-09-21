@@ -1,0 +1,60 @@
+---
+import TileSquare from './TileSquare.astro';
+import type { FeaturedEntry } from '../lib/pieces';
+import type { TileKind } from '../lib/tiles';
+import { featuredMeta } from '../lib/captions';
+
+interface Props {
+  entry: FeaturedEntry;
+  kind: TileKind;
+}
+
+const { entry, kind } = Astro.props;
+const { piece, categoryName } = entry;
+---
+<a class="card" href={piece.url}>
+  <TileSquare piece={piece} kind={kind} categoryName={categoryName} size="featured" />
+  <div class="body">
+    <span class="title">{piece.title}</span>
+    {piece.dek && <span class="dek">{piece.dek}</span>}
+    <span class="line meta">{featuredMeta(piece, categoryName)}</span>
+  </div>
+</a>
+
+<style>
+  /* The square sits in the rows' 220px label column so the text lines up with the Introduction and Experience text. */
+  .card {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 32px;
+    align-items: start;
+    color: var(--text);
+    text-decoration: none;
+  }
+  .card :global(.tile) { width: 160px; }
+  .body { max-width: 640px; padding-top: 2px; }
+  .title {
+    display: block;
+    font-size: 28px;
+    line-height: 1.2;
+    text-wrap: balance;
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+    transition: text-decoration-color var(--transition);
+  }
+  .card:hover .title { text-decoration-color: color-mix(in srgb, var(--rose) 50%, transparent); }
+  .card:focus-visible { outline: none; }
+  .card:focus-visible :global(.tile) { outline: 2px solid var(--rose); outline-offset: 2px; }
+  .dek { display: block; margin-top: 10px; font-style: italic; font-size: 21px; line-height: 1.45; font-weight: 450; color: var(--muted); }
+  .line { display: block; margin-top: 12px; font-size: 13px; color: var(--muted); }
+  @media (max-width: 639px) {
+    .card { grid-template-columns: 112px 1fr; gap: 16px; }
+    .card :global(.tile) { width: auto; }
+    .body { padding-top: 0; }
+    .title { font-size: 20px; line-height: 1.25; font-weight: 450; }
+    .dek { font-size: 17px; line-height: 1.4; }
+    .line { font-size: 12px; }
+  }
+</style>

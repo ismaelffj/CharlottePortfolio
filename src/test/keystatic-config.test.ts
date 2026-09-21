@@ -13,6 +13,14 @@ describe('keystatic config', () => {
     expect(categories?.columns).toEqual(['order', 'hidden']);
   });
 
+  it('lets a piece be featured, and shows the flag in the writing list', () => {
+    const pieces = config.collections?.pieces;
+    expect(Object.keys(pieces?.schema ?? {})).toEqual([
+      'title', 'kind', 'category', 'date', 'published', 'featured', 'dek', 'image', 'imageAlt', 'openingLines', 'editorsNote',
+    ]);
+    expect(pieces?.columns).toEqual(['category', 'date', 'published', 'featured']);
+  });
+
   it('uses local storage outside production', () => {
     expect(config.storage.kind).toBe('local');
   });

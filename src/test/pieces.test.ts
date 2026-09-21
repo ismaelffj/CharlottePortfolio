@@ -2,6 +2,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { categorySchema, pieceBaseSchema } from '../lib/schemas';
 import {
   UNCATEGORIZED,
+  featuredEntries,
   groupByCategory,
   normalizeCategory,
   normalizePiece,
@@ -61,6 +62,11 @@ describe('normalizePiece', () => {
     expect(p.readingMinutes).toBe(0);
   });
 
+  it('carries the featured flag', () => {
+    expect(piece('lead', { featured: true }).featured).toBe(true);
+    expect(piece('plain').featured).toBe(false);
+  });
+
   it('applies smart quotes to the title, dek, and opening lines', () => {
     const p = piece('q', { title: 'What\'s "kept"', dek: 'It\'s here', openingLines: '"Go," she said.' });
     expect(p.title).toBe('What’s “kept”');
@@ -110,6 +116,39 @@ describe('withoutHiddenCategories', () => {
   it('keeps pieces whose category no longer exists, so they can still surface as Uncategorized', () => {
     const list = [piece('orphan', { category: 'deleted' })];
     expect(withoutHiddenCategories(list, withHidden).map((p) => p.slug)).toEqual(['orphan']);
+  });
+});
+
+describe('featuredEntries', () => {
+  const sectionsOf = (...pieces: ReturnType<typeof piece>[]) => groupByCategory(publishedSorted(pieces), categories);
+
+  it('picks the featured pieces out of every section with their section names, newest first', () => {
+    const entries = featuredEntries(
+      sectionsOf(
+        piece('older-lead', { category: 'articles', date: '2024-05-14', featured: true }),
+        piece('filler', { category: 'articles', date: '2025-01-01' }),
+        piece('newer-lead', { category: 'essays', date: '2026-02-22', featured: true }),
+      ),
+    );
+    expect(entries.map((e) => e.piece.slug)).toEqual(['newer-lead', 'older-lead']);
+    expect(entries.map((e) => e.categoryName)).toEqual(['Essays', 'Articles']);
+  });
+
+  it('breaks date ties by title', () => {
+    const entries = featuredEntries(
+      sectionsOf(piece('b', { category: 'poetry', featured: true }), piece('a', { category: 'articles', featured: true })),
+    );
+    expect(entries.map((e) => e.piece.slug)).toEqual(['a', 'b']);
+  });
+
+  it('names the section of an orphaned piece Uncategorized', () => {
+    vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const entries = featuredEntries(sectionsOf(piece('orphan', { category: 'deleted', featured: true })));
+    expect(entries[0].categoryName).toBe(UNCATEGORIZED.name);
+  });
+
+  it('returns nothing when no piece is featured', () => {
+    expect(featuredEntries(sectionsOf(piece('filler', { category: 'articles' })))).toEqual([]);
   });
 });
 

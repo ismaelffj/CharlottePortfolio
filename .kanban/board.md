@@ -35,6 +35,12 @@ created: 2026-09-18
 
 ## Done
 
+- [x] Featured band on Home owner:Agent ^feat
+    A Featured checkbox on each piece puts it in a Featured section between the Experience row and the categories: an image-left card with the title, the dek, and a meta line that names the category. Tile captions no longer repeat the category. Content width kept at 992 on purpose and the theme corrected to the built numbers. Privilege and Unemployable flagged.
+    > 2026-09-20 — Tests, astro check, and a production build pass; theme, spec, and guide updated.
+    > 2026-09-20 — Featured square reduced to 160px, 112px on phones, after the first live look.
+    > 2026-09-21 — Committed and pushed to main for the Vercel deploy. Dev-only: images of the two pieces whose folder names contain a colon 500 in the dev image endpoint; production is unaffected.
+
 - [x] Phase 1: skeleton and admin !P0 owner:Agent phase:1 ^p1sk
     Plan: documentation/plans/2026-09-18-portfolio-site.md, tasks 1 to 6.
     - [x] Task 1: project scaffold

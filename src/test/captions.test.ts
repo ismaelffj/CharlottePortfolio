@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { categorySchema, pieceBaseSchema } from '../lib/schemas';
 import { normalizeCategory, normalizePiece } from '../lib/pieces';
-import { backLink, captionMeta, hostnameOf, outletLabel, pieceLabel, pieceMetaLine } from '../lib/captions';
+import { backLink, captionMeta, featuredMeta, hostnameOf, outletLabel, pieceLabel, pieceMetaLine } from '../lib/captions';
 
 const piece = (overrides: Record<string, unknown>) =>
   normalizePiece('slug', pieceBaseSchema.parse({ title: 'T', published: true, date: '2024-03-15', ...overrides }));
@@ -10,22 +10,28 @@ const prose = (outlet: { name: string; url: string }, words = 2070) =>
   piece({ kind: { discriminant: 'prose', value: { outlet, body: 'word '.repeat(words) } } });
 
 describe('captionMeta', () => {
-  it('formats prose with the outlet and month', () => {
-    expect(captionMeta(prose({ name: 'The Daily', url: '' }), 'Reporting')).toBe('Reporting · The Daily · March 2024');
+  it('formats prose with the outlet and month, without the category its section already names', () => {
+    expect(captionMeta(prose({ name: 'The Daily', url: '' }))).toBe('The Daily · March 2024');
   });
 
   it('drops the outlet segment when there is none', () => {
-    expect(captionMeta(prose({ name: '', url: '' }), 'Essays')).toBe('Essays · March 2024');
+    expect(captionMeta(prose({ name: '', url: '' }))).toBe('March 2024');
   });
 
   it('formats poems with the form and year', () => {
     const p = piece({ kind: { discriminant: 'poem', value: { form: 'free verse', poems: [{ title: '', verse: 'x' }] } } });
-    expect(captionMeta(p, 'Poetry')).toBe('Poetry · free verse · 2024');
+    expect(captionMeta(p)).toBe('free verse · 2024');
   });
 
   it('formats papers with the venue and year', () => {
     const p = piece({ kind: { discriminant: 'paper', value: { venue: 'Journal of Sociology', coauthors: '', abstract: 'a', pdf: '/p.pdf' } } });
-    expect(captionMeta(p, 'Research')).toBe('Research · Journal of Sociology · 2024');
+    expect(captionMeta(p)).toBe('Journal of Sociology · 2024');
+  });
+});
+
+describe('featuredMeta', () => {
+  it('leads with the category, because a featured card sits outside its section', () => {
+    expect(featuredMeta(prose({ name: 'The Daily', url: '' }), 'Articles')).toBe('Articles · The Daily · March 2024');
   });
 });
 

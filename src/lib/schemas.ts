@@ -114,6 +114,7 @@ export const pieceBaseSchema = z.object({
   category: str(),
   date: isoDate(),
   published: bool('published'),
+  featured: bool('featured'),
   dek: str(),
   imageAlt: str(),
   openingLines: str(),

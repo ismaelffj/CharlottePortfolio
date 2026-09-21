@@ -27,16 +27,21 @@ export function outletLabel(outlet: { name: string; url: string }): string {
   return '';
 }
 
-/** The caption under a tile on the home page. */
-export function captionMeta(piece: Piece, categoryName: string): string {
+/** The caption under a tile on the home page; the section heading above the grid already names the category. */
+export function captionMeta(piece: Piece): string {
   switch (piece.kind) {
     case 'prose':
-      return join([categoryName, outletLabel(piece.outlet), formatMonthYear(piece.date)]);
+      return join([outletLabel(piece.outlet), formatMonthYear(piece.date)]);
     case 'poem':
-      return join([categoryName, piece.form, formatYear(piece.date)]);
+      return join([piece.form, formatYear(piece.date)]);
     case 'paper':
-      return join([categoryName, piece.venue, formatYear(piece.date)]);
+      return join([piece.venue, formatYear(piece.date)]);
   }
+}
+
+/** The meta line on a featured card, which sits outside its section and so names the category itself. */
+export function featuredMeta(piece: Piece, categoryName: string): string {
+  return join([categoryName, captionMeta(piece)]);
 }
 
 /** The meta line under a piece's dek. */
