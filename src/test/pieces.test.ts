@@ -67,14 +67,14 @@ describe('normalizePiece', () => {
     expect(piece('plain').featured).toBe(false);
   });
 
-  it('carries the row text choice, publication by default', () => {
+  it('carries the row text choice, none by default', () => {
     expect(piece('paper', { rowText: 'excerpt' }).rowText).toBe('excerpt');
-    expect(piece('plain').rowText).toBe('publication');
+    expect(piece('plain').rowText).toBe('none');
   });
 
   it('gives an entry parsed before row text existed the default, so a cached content store cannot break the build', () => {
     const stale = { ...pieceBaseSchema.parse({ title: 'Old' }), rowText: undefined } as unknown as PieceData;
-    expect(normalizePiece('old', stale).rowText).toBe('publication');
+    expect(normalizePiece('old', stale).rowText).toBe('none');
   });
 
   it('applies smart quotes to the title, dek, and opening lines', () => {

@@ -44,21 +44,21 @@ describe('captionDetail and captionDate', () => {
 });
 
 describe('rowLine', () => {
-  it('shows where the piece appeared by default', () => {
-    expect(rowLine(prose({ name: 'The Daily', url: '' }))).toEqual({ kind: 'publication', text: 'The Daily' });
-    expect(rowLine(paper())).toEqual({ kind: 'publication', text: 'Journal of Sociology' });
-  });
-
-  it('falls back to the opening lines when the piece appeared nowhere, and to no line at all', () => {
-    expect(rowLine(talk({ openingLines: 'The first thing the water took.' }))).toEqual({ kind: 'lines', text: 'The first thing the water took.' });
-    expect(rowLine(talk({}))).toBeNull();
+  it('gives no text line by default, whatever the piece has to offer', () => {
+    expect(rowLine(paper({ dek: 'What the payroll forgot.', openingLines: 'We counted.' }))).toBeNull();
+    expect(rowLine(talk({ openingLines: 'The first thing the water took.' }))).toBeNull();
   });
 
   it('shows the one-line description when chosen', () => {
     expect(rowLine(paper({ rowText: 'description', dek: 'What the payroll forgot.' }))).toEqual({ kind: 'description', text: 'What the payroll forgot.' });
   });
 
-  it('shows the opening of the text when chosen, cut at a word boundary with an ellipsis', () => {
+  it('shows the typed opening lines when the opening of the text is chosen', () => {
+    const line = rowLine(paper({ rowText: 'excerpt', openingLines: 'The first thing the water took.' }, 'word '.repeat(60)));
+    expect(line).toEqual({ kind: 'lines', text: 'The first thing the water took.' });
+  });
+
+  it('falls back to the text itself, cut at a word boundary with an ellipsis, when no opening lines were typed', () => {
     const line = rowLine(paper({ rowText: 'excerpt' }, 'word '.repeat(60)));
     expect(line?.kind).toBe('excerpt');
     expect(line?.text.endsWith('…')).toBe(true);
@@ -66,9 +66,9 @@ describe('rowLine', () => {
     expect(rowLine(talk({ rowText: 'excerpt' }, 'A short body.'))).toEqual({ kind: 'excerpt', text: 'A short body.' });
   });
 
-  it('falls back to the publication line when the chosen text is empty', () => {
-    expect(rowLine(paper({ rowText: 'description' }))).toEqual({ kind: 'publication', text: 'Journal of Sociology' });
-    expect(rowLine(paper({ rowText: 'excerpt' }, ''))).toEqual({ kind: 'publication', text: 'Journal of Sociology' });
+  it('gives no text line when the chosen text is empty', () => {
+    expect(rowLine(paper({ rowText: 'description' }))).toBeNull();
+    expect(rowLine(paper({ rowText: 'excerpt' }, ''))).toBeNull();
   });
 });
 

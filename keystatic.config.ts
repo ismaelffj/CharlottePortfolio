@@ -240,10 +240,10 @@ export default config({
         rowText: fields.select({
           label: 'Row text',
           description:
-            'What shows under the title when the category uses the Rows layout. Where it appeared is the venue, outlet, or form, or the opening lines when there is none. The opening of the text is the first 155 characters of the abstract, body, or poem.',
-          defaultValue: 'publication',
+            'An extra line under the title when the category uses the Rows layout, above the venue, outlet, or form. Opening of the text shows the opening lines you typed, or, when that field is empty, the first 155 characters of the abstract, body, or poem.',
+          defaultValue: 'none',
           options: [
-            { label: 'Where it appeared', value: 'publication' },
+            { label: 'None', value: 'none' },
             { label: 'One-line description', value: 'description' },
             { label: 'Opening of the text', value: 'excerpt' },
           ],

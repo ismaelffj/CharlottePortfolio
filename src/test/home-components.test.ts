@@ -127,7 +127,7 @@ describe('CategorySection', () => {
     expect(html).toMatch(/class="grid"[^>]*style="--columns: 6; --columns-tablet: 3; --columns-phone: 2;"/);
   });
 
-  it('renders a rows section as a list: title, the line under it, and the date on the right', async () => {
+  it('renders a rows section as a list: title, where the piece appeared under it, and the date on the right', async () => {
     const html = await render(
       section({ kind: 'rows', images: false }, [
         talk('remarks', { date: '2025-04-12', openingLines: 'The first thing the water took.' }),
@@ -138,15 +138,28 @@ describe('CategorySection', () => {
     expect(html).not.toContain('class="tile');
     expect(html.match(/href="\/writing\//g)).toHaveLength(2);
     expect(html).toMatch(/class="title[^"]*"[^>]*>remarks</);
-    expect(html).toMatch(/class="line lines[^"]*"[^>]*>“The first thing the water took.”</);
-    expect(html).toMatch(/class="line publication[^"]*"[^>]*>Journal</);
+    expect(html).toMatch(/class="detail meta[^"]*"[^>]*>Journal</);
     expect(html).toMatch(/class="date[^"]*"[^>]*>April 2025</);
     expect(html).toMatch(/class="date[^"]*"[^>]*>2024</);
+    expect(html).not.toContain('class="line');
   });
 
-  it('leaves the line out of a row with nothing to say under the title', async () => {
+  it('puts the chosen text line between the title and where the piece appeared', async () => {
+    const html = await render(
+      section({ kind: 'rows', images: false }, [
+        paper('census', { rowText: 'description', dek: 'What the payroll forgot.' }),
+        talk('remarks', { rowText: 'excerpt', openingLines: 'The first thing the water took.' }),
+      ]),
+    );
+    expect(html).toMatch(/class="title[^"]*"[^>]*>census<\/span><span class="line description[^"]*"[^>]*>What the payroll forgot.<\/span><span class="detail meta[^"]*"[^>]*>Journal</);
+    expect(html).toMatch(/class="line lines[^"]*"[^>]*>“The first thing the water took.”</);
+    expect(html.match(/class="detail/g)).toHaveLength(1);
+  });
+
+  it('leaves both lines out of a row with nothing to say under the title', async () => {
     const html = await render(section({ kind: 'rows', images: false }, [talk('on-reading-aloud')]));
     expect(html).not.toContain('class="line');
+    expect(html).not.toContain('class="detail');
   });
 
   it('adds a square to each row when the category shows images, with the tile fallbacks for pieces without one', async () => {

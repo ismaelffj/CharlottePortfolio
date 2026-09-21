@@ -51,26 +51,31 @@ export function captionMeta(piece: Piece): string {
 }
 
 export interface RowLine {
-  /** Decides the type: publication in the meta face, the rest in the body face; lines in quotes. */
-  kind: 'publication' | 'description' | 'excerpt' | 'lines';
+  /** Decides the type: the description and typed lines italic, the lines in quotes, the excerpt upright. */
+  kind: 'description' | 'lines' | 'excerpt';
   text: string;
 }
 
 /**
- * The line under the title in a rows section, by the piece's Row text choice. A chosen
- * description or excerpt that turns out empty falls back to the publication line, which
- * itself falls back to the opening lines, so a row never shows a gap.
+ * The optional text line under the title in a rows section, by the piece's Row text choice;
+ * it sits above the caption detail (where the piece appeared). Opening of the text prefers
+ * the lines Charlotte typed and otherwise cuts the text itself. An empty choice is no line.
  */
 export function rowLine(piece: Piece): RowLine | null {
-  if (piece.rowText === 'description' && piece.dek.trim()) return { kind: 'description', text: piece.dek.trim() };
-  if (piece.rowText === 'excerpt') {
-    const text = excerpt(piece.plainText);
-    if (text) return { kind: 'excerpt', text };
+  switch (piece.rowText) {
+    case 'none':
+      return null;
+    case 'description': {
+      const text = piece.dek.trim();
+      return text ? { kind: 'description', text } : null;
+    }
+    case 'excerpt': {
+      const lines = piece.openingLines.trim();
+      if (lines) return { kind: 'lines', text: lines };
+      const text = excerpt(piece.plainText);
+      return text ? { kind: 'excerpt', text } : null;
+    }
   }
-  const detail = captionDetail(piece);
-  if (detail) return { kind: 'publication', text: detail };
-  const lines = piece.openingLines.trim();
-  return lines ? { kind: 'lines', text: lines } : null;
 }
 
 /** The meta line on a featured card, which sits outside its section and so names the category itself. */

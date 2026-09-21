@@ -2,7 +2,7 @@
 import { Image } from 'astro:assets';
 import type { Piece } from '../lib/pieces';
 import { THUMBNAIL_IMAGE, type TileKind } from '../lib/tiles';
-import { captionDate, rowLine } from '../lib/captions';
+import { captionDate, captionDetail, rowLine } from '../lib/captions';
 
 interface Props {
   piece: Piece;
@@ -11,7 +11,9 @@ interface Props {
 }
 
 const { piece, thumbnail } = Astro.props;
+// Under the title: the piece's optional text line first, then where it appeared.
 const line = rowLine(piece);
+const detail = captionDetail(piece);
 ---
 <a class="row" href={piece.url}>
   {thumbnail === 'image' && piece.image && (
@@ -22,11 +24,8 @@ const line = rowLine(piece);
   {thumbnail && thumbnail !== 'image' && <span class:list={['thumb', thumbnail]}></span>}
   <span class="text">
     <span class="title">{piece.title}</span>
-    {line && (
-      <span class:list={['line', line.kind, { meta: line.kind === 'publication' }]}>
-        {line.kind === 'lines' ? `“${line.text}”` : line.text}
-      </span>
-    )}
+    {line && <span class:list={['line', line.kind]}>{line.kind === 'lines' ? `“${line.text}”` : line.text}</span>}
+    {detail && <span class="detail meta">{detail}</span>}
   </span>
   <span class="date meta">{captionDate(piece)}</span>
 </a>
@@ -62,18 +61,18 @@ const line = rowLine(piece);
     transition: text-decoration-color var(--transition);
   }
   .row:hover .title { text-decoration-color: color-mix(in srgb, var(--rose) 50%, transparent); }
-  .line { display: block; margin-top: 4px; color: var(--muted); }
-  .line.publication { font-size: 13px; }
-  .line.description, .line.excerpt, .line.lines { font-size: 16px; line-height: 1.4; font-weight: 450; }
+  .line { display: block; margin-top: 4px; font-size: 16px; line-height: 1.4; font-weight: 450; color: var(--muted); }
   .line.description, .line.lines { font-style: italic; }
+  .detail { display: block; margin-top: 4px; font-size: 13px; color: var(--muted); }
+  .line + .detail { margin-top: 6px; }
   /* Sits on the title's first line, whatever the title wraps to. */
   .date { flex: 0 0 auto; margin-left: auto; padding-top: 5px; font-size: 13px; color: var(--muted); text-align: right; }
   @media (max-width: 639px) {
     .row { gap: 12px; padding: 14px 0; }
     .thumb { width: 48px; }
     .title { font-size: 17px; font-weight: 450; }
-    .line.publication, .date { font-size: 12px; }
-    .line.description, .line.excerpt, .line.lines { font-size: 15px; }
+    .line { font-size: 15px; }
+    .detail, .date { font-size: 12px; }
     .date { padding-top: 4px; }
   }
 </style>

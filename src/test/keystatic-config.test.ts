@@ -34,10 +34,10 @@ describe('keystatic config', () => {
     expect(pieces?.columns).toEqual(['category', 'date', 'published', 'featured']);
   });
 
-  it('lets a piece choose what a row shows under its title, the publication line by default', () => {
+  it('lets a piece choose the text line under its title, none by default', () => {
     const rowText = config.collections?.pieces?.schema.rowText;
-    expect(rowText?.defaultValue()).toBe('publication');
-    expect(rowText?.options.map((option) => option.value)).toEqual(['publication', 'description', 'excerpt']);
+    expect(rowText?.defaultValue()).toBe('none');
+    expect(rowText?.options.map((option) => option.value)).toEqual(['none', 'description', 'excerpt']);
   });
 
   it('uses local storage outside production', () => {

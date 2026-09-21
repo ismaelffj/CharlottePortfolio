@@ -168,9 +168,9 @@ describe('category layout', () => {
 });
 
 describe('piece row text', () => {
-  it('shows a piece without a row text line as the publication line, without a warning', () => {
+  it('gives a piece without a row text line no text line, without a warning', () => {
     const piece = pieceBaseSchema.parse({ title: 't', kind: { discriminant: 'prose', value: { body: '' } }, date: '2024-03-15' });
-    expect(piece.rowText).toBe('publication');
+    expect(piece.rowText).toBe('none');
     expect(warn).not.toHaveBeenCalled();
   });
 
@@ -179,8 +179,8 @@ describe('piece row text', () => {
     expect(pieceBaseSchema.parse({ title: 't', rowText: 'excerpt' }).rowText).toBe('excerpt');
   });
 
-  it('falls back to the publication line when the row text is unknown, and says so', () => {
-    expect(pieceBaseSchema.parse({ title: 't', rowText: 'abstract' }).rowText).toBe('publication');
+  it('falls back to no text line when the row text is unknown, and says so', () => {
+    expect(pieceBaseSchema.parse({ title: 't', rowText: 'abstract' }).rowText).toBe('none');
     expect(warn).toHaveBeenCalledWith(expect.stringContaining('[content] row text'));
   });
 });
