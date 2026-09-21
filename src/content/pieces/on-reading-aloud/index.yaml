@@ -1,21 +1,25 @@
-title: "On reading aloud"
+title: On reading aloud
 kind:
   discriminant: prose
   value:
-    outlet:
-      name: ""
-      url: ""
-    body: |-
-      You will be tempted to correct. Don’t. Not at first. The person across the table from you has spent a lifetime being corrected, usually by people who did not stay to hear the end of the sentence.
+    outlet: {}
+    body: >
+      You will be tempted to correct. Don’t. Not at first. The person across the
+      table from you has spent a lifetime being corrected, usually by people who
+      did not stay to hear the end of the sentence.
 
-      Read aloud with them. Read badly if you must. Let them hear you stumble on a word, and let them see that the world does not end. The single most useful thing you can give a new reader is the sight of an experienced one who is not afraid of the page.
 
-      Then, when they trust you, and only then, be exact. Precision is a gift you give to people who already know you are on their side.
+      Read aloud with them. Read badly if you must. Let them hear you stumble on
+      a word, and let them see that the world does not end. The single most
+      useful thing you can give a new reader is the sight of an experienced one
+      who is not afraid of the page.
+
+
+      Then, when they trust you, and only then, be exact. Precision is a gift
+      you give to people who already know you are on their side.
 category: speeches
 date: 2023-10-03
 published: true
-dek: "A short talk for new volunteer tutors at the adult literacy program."
-image: ""
-imageAlt: ""
-openingLines: ""
-editorsNote: ""
+featured: false
+dek: A short talk for new volunteer tutors at the adult literacy program.
+rowText: description

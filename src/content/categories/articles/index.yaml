@@ -1,2 +1,7 @@
 name: Articles
 order: 1
+layout:
+  discriminant: tiles
+  value:
+    perRow: 3
+hidden: false

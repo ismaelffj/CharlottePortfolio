@@ -39,9 +39,11 @@ kind:
 category: research-papers
 date: 2019-03-08
 published: true
+featured: false
 dek: >-
   The discussion comes down to putting money back into the community instead of
   keeping it behind bars where it only goes towards keeping the same people
   locked up and unable to begin anew
+rowText: description
 image: image.JPG
 imageAlt: Placeholder artwork.

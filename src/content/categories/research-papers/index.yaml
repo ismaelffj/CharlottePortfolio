@@ -1,2 +1,7 @@
 name: Research papers
 order: 3
+layout:
+  discriminant: rows
+  value:
+    images: false
+hidden: false

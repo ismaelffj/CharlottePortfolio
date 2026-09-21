@@ -296,8 +296,10 @@ kind:
 category: speeches
 date: 2020-11-29
 published: true
+featured: false
 dek: >-
   Speech given at a Revolution Coalition event addressing the climate crisis and
   activism 
+rowText: description
 image: image.JPG
 imageAlt: Placeholder artwork.

@@ -1,22 +1,30 @@
-title: "Remarks at the library reopening"
+title: Remarks at the library reopening
 kind:
   discriminant: prose
   value:
-    outlet:
-      name: ""
-      url: ""
-    body: |-
-      The first thing the water took was the children’s section, which is how we learned what it wanted. It came in under the door at two in the morning and by six it was standing in the stacks like a patron who had lost the return slip.
+    outlet: {}
+    body: >
+      The first thing the water took was the children’s section, which is how we
+      learned what it wanted. It came in under the door at two in the morning
+      and by six it was standing in the stacks like a patron who had lost the
+      return slip.
 
-      I want to thank the people who carried the books out, and the people who dried them page by page with hair dryers in the church hall, and the people who did the least glamorous work of all, which was deciding what could be saved and what could not, and writing it down.
 
-      A library is a building, and buildings flood. But a library is also a list of what a town decided to keep. Today we reopen the building. The list was never closed.
+      I want to thank the people who carried the books out, and the people who
+      dried them page by page with hair dryers in the church hall, and the
+      people who did the least glamorous work of all, which was deciding what
+      could be saved and what could not, and writing it down.
+
+
+      A library is a building, and buildings flood. But a library is also a list
+      of what a town decided to keep. Today we reopen the building. The list was
+      never closed.
 category: speeches
 date: 2025-04-12
 published: true
-dek: "Delivered at the reopening of the county library after the flood, April 2025."
-image: ""
-imageAlt: ""
-openingLines: |-
-  The first thing the water took was the children’s section, which is how we learned what it wanted.
-editorsNote: ""
+featured: false
+dek: Delivered at the reopening of the county library after the flood, April 2025.
+rowText: description
+openingLines: >-
+  The first thing the water took was the children’s section, which is how we
+  learned what it wanted.

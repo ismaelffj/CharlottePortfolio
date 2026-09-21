@@ -1,2 +1,7 @@
 name: Poems
 order: 2
+layout:
+  discriminant: tiles
+  value:
+    perRow: 5
+hidden: false
