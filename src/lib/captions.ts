@@ -50,30 +50,21 @@ export function captionMeta(piece: Piece): string {
   return join([captionDetail(piece), captionDate(piece)]);
 }
 
-export interface RowLine {
-  /** Where the text came from; the row sets typed lines in quotes and styles all three alike. */
-  kind: 'description' | 'lines' | 'excerpt';
-  text: string;
-}
-
 /**
- * The optional text line under the title in a rows section, by the piece's Row text choice;
- * it sits above the caption detail (where the piece appeared). Opening of the text prefers
- * the lines Charlotte typed and otherwise cuts the text itself. An empty choice is no line.
+ * The optional line under the title on the home page, in a tile caption or a row, by the
+ * piece's Extra line choice; it sits above where the piece appeared. Opening of the text
+ * prefers the lines Charlotte typed, quoted, and otherwise cuts the text itself. An empty
+ * choice is no line. One style whatever the source, so this is the display text itself.
  */
-export function rowLine(piece: Piece): RowLine | null {
-  switch (piece.rowText) {
+export function extraLineText(piece: Piece): string | null {
+  switch (piece.extraLine) {
     case 'none':
       return null;
-    case 'description': {
-      const text = piece.dek.trim();
-      return text ? { kind: 'description', text } : null;
-    }
+    case 'description':
+      return piece.dek.trim() || null;
     case 'excerpt': {
       const lines = piece.openingLines.trim();
-      if (lines) return { kind: 'lines', text: lines };
-      const text = excerpt(piece.plainText);
-      return text ? { kind: 'excerpt', text } : null;
+      return lines ? `“${lines}”` : excerpt(piece.plainText) || null;
     }
   }
 }

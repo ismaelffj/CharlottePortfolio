@@ -46,6 +46,19 @@ describe('Tile', () => {
     const p = piece('archive', { openingLines: 'The county keeps its records.' });
     const html = await container.renderToString(Tile, { props: { piece: p, kind: 'paper', categoryName: 'Essays', perRow: 4 } });
     expect(html).toMatch(/class="caption-meta[^"]*"[^>]*>June 2024</);
+    expect(html).not.toContain('class="caption-line');
+  });
+
+  it('puts the chosen extra line between the caption title and its meta', async () => {
+    const p = piece('archive', { extraLine: 'description', dek: 'What the county forgot.', openingLines: 'The county keeps its records.' });
+    const html = await container.renderToString(Tile, { props: { piece: p, kind: 'paper', categoryName: 'Essays', perRow: 4 } });
+    expect(html).toMatch(/class="caption-title[^"]*"[^>]*>archive<\/span><span class="caption-line[^"]*"[^>]*>What the county forgot.<\/span><span class="caption-meta[^"]*"[^>]*>June 2024</);
+  });
+
+  it('quotes typed opening lines in the caption when the opening of the text is chosen', async () => {
+    const p = piece('archive', { extraLine: 'excerpt', openingLines: 'The county keeps its records.' });
+    const html = await container.renderToString(Tile, { props: { piece: p, kind: 'paper', categoryName: 'Essays', perRow: 4 } });
+    expect(html).toMatch(/class="caption-line[^"]*"[^>]*>“The county keeps its records.”</);
   });
 
   it('keeps grid squares at their full-size type', async () => {
@@ -147,12 +160,12 @@ describe('CategorySection', () => {
   it('puts the chosen text line between the title and where the piece appeared', async () => {
     const html = await render(
       section({ kind: 'rows', images: false }, [
-        paper('census', { rowText: 'description', dek: 'What the payroll forgot.' }),
-        talk('remarks', { rowText: 'excerpt', openingLines: 'The first thing the water took.' }),
+        paper('census', { extraLine: 'description', dek: 'What the payroll forgot.' }),
+        talk('remarks', { extraLine: 'excerpt', openingLines: 'The first thing the water took.' }),
       ]),
     );
-    expect(html).toMatch(/class="title[^"]*"[^>]*>census<\/span><span class="line description[^"]*"[^>]*>What the payroll forgot.<\/span><span class="detail meta[^"]*"[^>]*>Journal</);
-    expect(html).toMatch(/class="line lines[^"]*"[^>]*>“The first thing the water took.”</);
+    expect(html).toMatch(/class="title[^"]*"[^>]*>census<\/span><span class="line[^"]*"[^>]*>What the payroll forgot.<\/span><span class="detail meta[^"]*"[^>]*>Journal</);
+    expect(html).toMatch(/class="line[^"]*"[^>]*>“The first thing the water took.”</);
     expect(html.match(/class="detail/g)).toHaveLength(1);
   });
 

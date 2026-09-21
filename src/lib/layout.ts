@@ -3,7 +3,7 @@
 /** How many tiles sit across a category grid on desktop. */
 export const TILES_PER_ROW = { min: 2, max: 6, fallback: 4 } as const;
 
-/** The optional text line a row shows under the title, above where the piece appeared, when its category uses the rows layout. */
-export const ROW_TEXTS = ['none', 'description', 'excerpt'] as const;
-export type RowText = (typeof ROW_TEXTS)[number];
-export const DEFAULT_ROW_TEXT: RowText = 'none';
+/** The optional line under the title on the home page, in a tile caption or a row, above where the piece appeared. */
+export const EXTRA_LINES = ['none', 'description', 'excerpt'] as const;
+export type ExtraLine = (typeof EXTRA_LINES)[number];
+export const DEFAULT_EXTRA_LINE: ExtraLine = 'none';

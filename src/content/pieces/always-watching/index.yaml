@@ -239,4 +239,6 @@ kind:
 category: articles
 date: 2026-04-10
 published: true
+featured: false
+extraLine: description
 image: image.JPG

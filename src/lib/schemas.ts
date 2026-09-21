@@ -1,5 +1,5 @@
 import { z } from 'astro/zod';
-import { DEFAULT_ROW_TEXT, ROW_TEXTS, TILES_PER_ROW } from './layout';
+import { DEFAULT_EXTRA_LINE, EXTRA_LINES, TILES_PER_ROW } from './layout';
 
 // Every schema here is tolerant: a missing or malformed value becomes a safe
 // fallback instead of failing the build, because Charlotte gets no signal when
@@ -80,13 +80,13 @@ export const categorySchema = z.object({
 export type CategoryData = z.infer<typeof categorySchema>;
 
 /** A missing choice takes the default silently; an unknown one takes it with a warning. */
-const rowText = z
-  .enum(ROW_TEXTS)
+const extraLine = z
+  .enum(EXTRA_LINES)
   .nullish()
-  .transform((value) => value ?? DEFAULT_ROW_TEXT)
+  .transform((value) => value ?? DEFAULT_EXTRA_LINE)
   .catch((ctx) => {
-    warn('row text', ctx.issues);
-    return DEFAULT_ROW_TEXT;
+    warn('extra line', ctx.issues);
+    return DEFAULT_EXTRA_LINE;
   });
 
 export const settingsSchema = z.object({
@@ -154,7 +154,7 @@ export const pieceBaseSchema = z.object({
   published: bool('published'),
   featured: bool('featured'),
   dek: str(),
-  rowText,
+  extraLine,
   imageAlt: str(),
   openingLines: str(),
   editorsNote: str(),

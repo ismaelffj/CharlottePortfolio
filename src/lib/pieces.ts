@@ -1,5 +1,5 @@
 import type { ImageMetadata } from 'astro';
-import { DEFAULT_ROW_TEXT, TILES_PER_ROW, type RowText } from './layout';
+import { DEFAULT_EXTRA_LINE, TILES_PER_ROW, type ExtraLine } from './layout';
 import type { CategoryData, LayoutData, PieceData } from './schemas';
 import { toPlainText } from './markdoc';
 import { readingMinutes, smartQuotes } from './text';
@@ -26,7 +26,7 @@ export interface Piece {
   published: boolean;
   featured: boolean;
   dek: string;
-  rowText: RowText;
+  extraLine: ExtraLine;
   image: ImageMetadata | null;
   imageAlt: string;
   openingLines: string;
@@ -81,7 +81,7 @@ export function normalizePiece(slug: string, data: PieceInput): Piece {
     featured: data.featured,
     dek: smartQuotes(data.dek),
     // Missing only from an entry a cached content store parsed before the field existed; see normalizeLayout.
-    rowText: data.rowText ?? DEFAULT_ROW_TEXT,
+    extraLine: data.extraLine ?? DEFAULT_EXTRA_LINE,
     image: data.image ?? null,
     imageAlt: data.imageAlt,
     openingLines: smartQuotes(data.openingLines),

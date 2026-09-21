@@ -22,6 +22,6 @@ featured: false
 dek: >-
   Forty-one interviews with former mill workers, and what they remember that the
   payroll does not.
-rowText: description
+extraLine: description
 image: image.jpg
 imageAlt: Placeholder artwork.

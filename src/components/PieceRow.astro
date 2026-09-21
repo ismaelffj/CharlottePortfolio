@@ -2,7 +2,7 @@
 import { Image } from 'astro:assets';
 import type { Piece } from '../lib/pieces';
 import { THUMBNAIL_IMAGE, type TileKind } from '../lib/tiles';
-import { captionDate, captionDetail, rowLine } from '../lib/captions';
+import { captionDate, captionDetail, extraLineText } from '../lib/captions';
 
 interface Props {
   piece: Piece;
@@ -12,7 +12,7 @@ interface Props {
 
 const { piece, thumbnail } = Astro.props;
 // Under the title: the piece's optional text line first, then where it appeared.
-const line = rowLine(piece);
+const line = extraLineText(piece);
 const detail = captionDetail(piece);
 ---
 <a class="row" href={piece.url}>
@@ -24,7 +24,7 @@ const detail = captionDetail(piece);
   {thumbnail && thumbnail !== 'image' && <span class:list={['thumb', thumbnail]}></span>}
   <span class="text">
     <span class="title">{piece.title}</span>
-    {line && <span class:list={['line', line.kind]}>{line.kind === 'lines' ? `“${line.text}”` : line.text}</span>}
+    {line && <span class="line">{line}</span>}
     {detail && <span class="detail meta">{detail}</span>}
   </span>
   <span class="date meta">{captionDate(piece)}</span>

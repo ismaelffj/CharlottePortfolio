@@ -250,10 +250,10 @@ export default config({
           description: 'Shows the piece in the Featured section of the home page, above the categories. Two work best.',
         }),
         dek: optionalText('One-line description (optional)', 'Shown under the title on the piece page.'),
-        rowText: fields.select({
-          label: 'Row text',
+        extraLine: fields.select({
+          label: 'Extra line',
           description:
-            'An extra line under the title when the category uses the Rows layout, above the venue, outlet, or form. Opening of the text shows the opening lines you typed, or, when that field is empty, the first 155 characters of the abstract, body, or poem.',
+            'An extra line under the title on the home page, in a tile caption or a row, above the venue, outlet, or form. Opening of the text shows the opening lines you typed, or, when that field is empty, the first 155 characters of the abstract, body, or poem.',
           defaultValue: 'none',
           options: [
             { label: 'None', value: 'none' },

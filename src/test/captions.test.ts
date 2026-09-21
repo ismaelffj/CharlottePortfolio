@@ -11,7 +11,7 @@ import {
   outletLabel,
   pieceLabel,
   pieceMetaLine,
-  rowLine,
+  extraLineText,
 } from '../lib/captions';
 
 const piece = (overrides: Record<string, unknown>) =>
@@ -43,32 +43,32 @@ describe('captionDetail and captionDate', () => {
   });
 });
 
-describe('rowLine', () => {
+describe('extraLineText', () => {
   it('gives no text line by default, whatever the piece has to offer', () => {
-    expect(rowLine(paper({ dek: 'What the payroll forgot.', openingLines: 'We counted.' }))).toBeNull();
-    expect(rowLine(talk({ openingLines: 'The first thing the water took.' }))).toBeNull();
+    expect(extraLineText(paper({ dek: 'What the payroll forgot.', openingLines: 'We counted.' }))).toBeNull();
+    expect(extraLineText(talk({ openingLines: 'The first thing the water took.' }))).toBeNull();
   });
 
   it('shows the one-line description when chosen', () => {
-    expect(rowLine(paper({ rowText: 'description', dek: 'What the payroll forgot.' }))).toEqual({ kind: 'description', text: 'What the payroll forgot.' });
+    expect(extraLineText(paper({ extraLine: 'description', dek: 'What the payroll forgot.' }))).toBe('What the payroll forgot.');
   });
 
-  it('shows the typed opening lines when the opening of the text is chosen', () => {
-    const line = rowLine(paper({ rowText: 'excerpt', openingLines: 'The first thing the water took.' }, 'word '.repeat(60)));
-    expect(line).toEqual({ kind: 'lines', text: 'The first thing the water took.' });
+  it('shows the typed opening lines, quoted, when the opening of the text is chosen', () => {
+    const line = extraLineText(paper({ extraLine: 'excerpt', openingLines: 'The first thing the water took.' }, 'word '.repeat(60)));
+    expect(line).toBe('“The first thing the water took.”');
   });
 
   it('falls back to the text itself, cut at a word boundary with an ellipsis, when no opening lines were typed', () => {
-    const line = rowLine(paper({ rowText: 'excerpt' }, 'word '.repeat(60)));
-    expect(line?.kind).toBe('excerpt');
-    expect(line?.text.endsWith('…')).toBe(true);
-    expect(line?.text.length).toBeLessThanOrEqual(156);
-    expect(rowLine(talk({ rowText: 'excerpt' }, 'A short body.'))).toEqual({ kind: 'excerpt', text: 'A short body.' });
+    const line = extraLineText(paper({ extraLine: 'excerpt' }, 'word '.repeat(60)));
+    expect(line?.startsWith('word word')).toBe(true);
+    expect(line?.endsWith('…')).toBe(true);
+    expect(line?.length).toBeLessThanOrEqual(156);
+    expect(extraLineText(talk({ extraLine: 'excerpt' }, 'A short body.'))).toBe('A short body.');
   });
 
   it('gives no text line when the chosen text is empty', () => {
-    expect(rowLine(paper({ rowText: 'description' }))).toBeNull();
-    expect(rowLine(paper({ rowText: 'excerpt' }, ''))).toBeNull();
+    expect(extraLineText(paper({ extraLine: 'description' }))).toBeNull();
+    expect(extraLineText(paper({ extraLine: 'excerpt' }, ''))).toBeNull();
   });
 });
 

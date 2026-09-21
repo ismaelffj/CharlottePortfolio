@@ -2,7 +2,7 @@
 import TileSquare from './TileSquare.astro';
 import type { Piece } from '../lib/pieces';
 import type { TileKind } from '../lib/tiles';
-import { captionMeta } from '../lib/captions';
+import { captionMeta, extraLineText } from '../lib/captions';
 
 interface Props {
   piece: Piece;
@@ -13,10 +13,12 @@ interface Props {
 }
 
 const { piece, kind, categoryName, perRow } = Astro.props;
+const line = extraLineText(piece);
 ---
 <a class="tile-link" href={piece.url}>
   <TileSquare piece={piece} kind={kind} categoryName={categoryName} size="grid" perRow={perRow} />
   <span class="caption-title">{piece.title}</span>
+  {line && <span class="caption-line">{line}</span>}
   <span class="caption-meta meta">{captionMeta(piece)}</span>
 </a>
 
@@ -36,9 +38,12 @@ const { piece, kind, categoryName, perRow } = Astro.props;
   .tile-link:hover .caption-title { text-decoration-color: color-mix(in srgb, var(--rose) 50%, transparent); }
   .tile-link:focus-visible { outline: none; }
   .tile-link:focus-visible :global(.tile) { outline: 2px solid var(--rose); outline-offset: 2px; }
+  .caption-line { display: block; margin-top: 4px; font-size: 15px; line-height: 1.4; font-weight: 450; color: var(--muted); }
   .caption-meta { display: block; margin-top: 4px; font-size: 13px; color: var(--muted); }
+  .caption-line + .caption-meta { margin-top: 6px; }
   @media (max-width: 639px) {
     .caption-title { margin-top: 10px; font-size: 17px; font-weight: 450; }
+    .caption-line { font-size: 14px; }
     .caption-meta { font-size: 12px; }
   }
 </style>

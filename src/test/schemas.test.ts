@@ -167,20 +167,20 @@ describe('category layout', () => {
   });
 });
 
-describe('piece row text', () => {
-  it('gives a piece without a row text line no text line, without a warning', () => {
+describe('piece extra line', () => {
+  it('gives a piece without an extra line choice no extra line, without a warning', () => {
     const piece = pieceBaseSchema.parse({ title: 't', kind: { discriminant: 'prose', value: { body: '' } }, date: '2024-03-15' });
-    expect(piece.rowText).toBe('none');
+    expect(piece.extraLine).toBe('none');
     expect(warn).not.toHaveBeenCalled();
   });
 
-  it('keeps a chosen row text', () => {
-    expect(pieceBaseSchema.parse({ title: 't', rowText: 'description' }).rowText).toBe('description');
-    expect(pieceBaseSchema.parse({ title: 't', rowText: 'excerpt' }).rowText).toBe('excerpt');
+  it('keeps a chosen extra line', () => {
+    expect(pieceBaseSchema.parse({ title: 't', extraLine: 'description' }).extraLine).toBe('description');
+    expect(pieceBaseSchema.parse({ title: 't', extraLine: 'excerpt' }).extraLine).toBe('excerpt');
   });
 
-  it('falls back to no text line when the row text is unknown, and says so', () => {
-    expect(pieceBaseSchema.parse({ title: 't', rowText: 'abstract' }).rowText).toBe('none');
-    expect(warn).toHaveBeenCalledWith(expect.stringContaining('[content] row text'));
+  it('falls back to no extra line when the choice is unknown, and says so', () => {
+    expect(pieceBaseSchema.parse({ title: 't', extraLine: 'abstract' }).extraLine).toBe('none');
+    expect(warn).toHaveBeenCalledWith(expect.stringContaining('[content] extra line'));
   });
 });

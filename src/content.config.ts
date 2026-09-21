@@ -16,7 +16,7 @@ import {
 // its images go missing). When a schema gains a field or entries are moved on disk, change this
 // file too (this comment is enough) so every entry is parsed again, locally and in the cached
 // production build.
-// Content revision: 2026-09-21 (2), piece folders renamed to their slugs.
+// Content revision: 2026-09-21 (3), the piece row text renamed to extra line.
 
 const single = (name: string) => glob({ pattern: `${name}/index.yaml`, base: './src/content' });
 

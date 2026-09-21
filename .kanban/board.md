@@ -34,6 +34,7 @@ created: 2026-09-18
     > 2026-09-21 — 131 tests, astro check, and production builds both with the default content and with Articles at 3 across, Research papers as rows, and Speeches as rows with images pass; spec, theme, and guide updated.
     > 2026-09-21 — Merged to main, not yet pushed. After the first local look: the row text is now an optional line in addition to where the piece appeared, placed above it, with None as the default; the opening lines are no longer an automatic fallback.
     > 2026-09-21 — The dev-only image failure was traced to Vite refusing paths with a colon: fourteen pieces had the title typed into the Slug box, two of them with colons. Their folders (and two paper PDF folders) are renamed to their slugs with no URL change, and the slug fields now refuse anything but lowercase letters, numbers, and hyphens. Moving entries needed the content.config.ts revision bump as well, since the store keeps a moved entry's old path.
+    > 2026-09-21 — The extra line now shows under tiles as well as in rows, so the field is renamed from Row text to Extra line (key rowText to extraLine, the eight files that had it migrated). Unclamped under tiles on purpose, to be judged on the real content.
 
 - [ ] Hidden flag on categories owner:Agent ^chid
     A Hidden checkbox on each category takes it and its pieces off the site (Home, piece pages, sitemap) without deleting anything; existing category files need no change. Waiting on the push and a check in the production admin.

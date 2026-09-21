@@ -42,6 +42,6 @@ dek: >-
   The discussion comes down to putting money back into the community instead of
   keeping it behind bars where it only goes towards keeping the same people
   locked up and unable to begin anew
-rowText: description
+extraLine: description
 image: image.JPG
 imageAlt: Placeholder artwork.

@@ -29,15 +29,15 @@ describe('keystatic config', () => {
   it('lets a piece be featured, and shows the flag in the writing list', () => {
     const pieces = config.collections?.pieces;
     expect(Object.keys(pieces?.schema ?? {})).toEqual([
-      'title', 'kind', 'category', 'date', 'published', 'featured', 'dek', 'rowText', 'image', 'imageAlt', 'openingLines', 'editorsNote',
+      'title', 'kind', 'category', 'date', 'published', 'featured', 'dek', 'extraLine', 'image', 'imageAlt', 'openingLines', 'editorsNote',
     ]);
     expect(pieces?.columns).toEqual(['category', 'date', 'published', 'featured']);
   });
 
   it('lets a piece choose the text line under its title, none by default', () => {
-    const rowText = config.collections?.pieces?.schema.rowText;
-    expect(rowText?.defaultValue()).toBe('none');
-    expect(rowText?.options.map((option) => option.value)).toEqual(['none', 'description', 'excerpt']);
+    const extraLine = config.collections?.pieces?.schema.extraLine;
+    expect(extraLine?.defaultValue()).toBe('none');
+    expect(extraLine?.options.map((option) => option.value)).toEqual(['none', 'description', 'excerpt']);
   });
 
   it('refuses a slug that is not lowercase letters, numbers, and hyphens, for pieces and categories alike', () => {
