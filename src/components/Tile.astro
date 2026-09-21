@@ -8,12 +8,14 @@ interface Props {
   piece: Piece;
   kind: TileKind;
   categoryName: string;
+  /** How many squares sit across the grid on desktop, which decides the image widths served. */
+  perRow: number;
 }
 
-const { piece, kind, categoryName } = Astro.props;
+const { piece, kind, categoryName, perRow } = Astro.props;
 ---
 <a class="tile-link" href={piece.url}>
-  <TileSquare piece={piece} kind={kind} categoryName={categoryName} size="grid" />
+  <TileSquare piece={piece} kind={kind} categoryName={categoryName} size="grid" perRow={perRow} />
   <span class="caption-title">{piece.title}</span>
   <span class="caption-meta meta">{captionMeta(piece)}</span>
 </a>

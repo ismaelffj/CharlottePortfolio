@@ -29,6 +29,10 @@ created: 2026-09-18
     > 2026-09-19 — Stylesheets inlined and Newsreader moved to its weight-only build after the first Lighthouse runs (85 and 92); Home stays at 93 because the remaining levers are design changes, declined.
 ## Review
 
+- [ ] Category layouts: tiles per row, rows with optional images, row text per piece owner:Agent ^clay
+    Each category chooses Tiles (with a Tiles per row count, 2 to 6, default 4; tablets cap at 3 and phones at 2, and grid images are served at the width their column count gives them) or Rows (heading left, one row per piece with the date on the right, hairlines between, optional 56px square at the start of each row). Each piece chooses its Row text: where it appeared, the one-line description, or the truncated opening of the text. Existing files need no change. Also found and fixed: Astro's content store is invalidated only by content.config.ts changing, so a schema field added elsewhere left cached entries without it and crashed the build; the normalizers now default such entries and content.config.ts carries a revision comment to bump. Waiting on the merge, the push, and a look at the rows in the production admin.
+    > 2026-09-21 — 131 tests, astro check, and production builds both with the default content and with Articles at 3 across, Research papers as rows, and Speeches as rows with images pass; spec, theme, and guide updated.
+
 - [ ] Hidden flag on categories owner:Agent ^chid
     A Hidden checkbox on each category takes it and its pieces off the site (Home, piece pages, sitemap) without deleting anything; existing category files need no change. Waiting on the push and a check in the production admin.
     > 2026-09-20 — Tests, astro check, and a build over Charlotte's content with Speeches hidden all pass; guide and spec updated.

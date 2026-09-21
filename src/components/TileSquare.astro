@@ -1,29 +1,16 @@
 ---
 import { Image } from 'astro:assets';
 import type { Piece } from '../lib/pieces';
-import type { TileKind } from '../lib/tiles';
+import { FEATURED_IMAGE, gridImage, type TileKind } from '../lib/tiles';
 
-type Size = 'grid' | 'featured';
-
-interface Props {
-  piece: Piece;
-  kind: TileKind;
-  categoryName: string;
-  size: Size;
-}
+type Props =
+  | { piece: Piece; kind: TileKind; categoryName: string; size: 'featured' }
+  /** A grid square is served at the width its category's column count gives it. */
+  | { piece: Piece; kind: TileKind; categoryName: string; size: 'grid'; perRow: number };
 
 const { piece, kind, categoryName, size } = Astro.props;
 
-// Grid tiles run four across on desktop and two across on phones; the featured square is 160px, or 112px on phones.
-const IMAGE: Record<Size, { width: number; widths: number[]; sizes: string }> = {
-  grid: {
-    width: 262,
-    widths: [262, 320, 524],
-    sizes: '(max-width: 639px) calc(50vw - 28px), (max-width: 1023px) calc(33vw - 40px), 262px',
-  },
-  featured: { width: 160, widths: [160, 320], sizes: '(max-width: 639px) 112px, 160px' },
-};
-const image = IMAGE[size];
+const image = Astro.props.size === 'featured' ? FEATURED_IMAGE : gridImage(Astro.props.perRow);
 // The featured square is never larger than 160px, so it takes the small type at every width.
 const classes = (...kinds: string[]) => ['tile', ...kinds, { small: size === 'featured' }];
 ---

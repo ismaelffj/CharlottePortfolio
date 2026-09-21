@@ -9,16 +9,35 @@ describe('keystatic config', () => {
 
   it('lets a category be hidden, and shows the flag in the category list', () => {
     const categories = config.collections?.categories;
-    expect(Object.keys(categories?.schema ?? {})).toEqual(['name', 'order', 'hidden']);
+    expect(Object.keys(categories?.schema ?? {})).toEqual(['name', 'order', 'layout', 'hidden']);
     expect(categories?.columns).toEqual(['order', 'hidden']);
+  });
+
+  it('lets a category choose tiles or rows, with the tile count or the images flag under the choice', () => {
+    const layout = config.collections?.categories?.schema.layout;
+    expect(layout?.kind).toBe('conditional');
+    expect(layout?.discriminant.defaultValue()).toBe('tiles');
+    expect(layout?.discriminant.options.map((option) => option.value)).toEqual(['tiles', 'rows']);
+    expect(Object.keys(layout?.values.tiles.fields ?? {})).toEqual(['perRow']);
+    expect(layout?.values.tiles.fields.perRow.defaultValue()).toBe(4);
+    expect(() => layout?.values.tiles.fields.perRow.validate(1)).toThrow('at least 2');
+    expect(() => layout?.values.tiles.fields.perRow.validate(7)).toThrow('at most 6');
+    expect(Object.keys(layout?.values.rows.fields ?? {})).toEqual(['images']);
+    expect(layout?.values.rows.fields.images.defaultValue()).toBe(false);
   });
 
   it('lets a piece be featured, and shows the flag in the writing list', () => {
     const pieces = config.collections?.pieces;
     expect(Object.keys(pieces?.schema ?? {})).toEqual([
-      'title', 'kind', 'category', 'date', 'published', 'featured', 'dek', 'image', 'imageAlt', 'openingLines', 'editorsNote',
+      'title', 'kind', 'category', 'date', 'published', 'featured', 'dek', 'rowText', 'image', 'imageAlt', 'openingLines', 'editorsNote',
     ]);
     expect(pieces?.columns).toEqual(['category', 'date', 'published', 'featured']);
+  });
+
+  it('lets a piece choose what a row shows under its title, the publication line by default', () => {
+    const rowText = config.collections?.pieces?.schema.rowText;
+    expect(rowText?.defaultValue()).toBe('publication');
+    expect(rowText?.options.map((option) => option.value)).toEqual(['publication', 'description', 'excerpt']);
   });
 
   it('uses local storage outside production', () => {

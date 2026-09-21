@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { categorySchema, pieceBaseSchema } from '../lib/schemas';
+import { categorySchema, pieceBaseSchema, type CategoryData, type PieceData } from '../lib/schemas';
 import {
   UNCATEGORIZED,
   featuredEntries,
@@ -67,6 +67,16 @@ describe('normalizePiece', () => {
     expect(piece('plain').featured).toBe(false);
   });
 
+  it('carries the row text choice, publication by default', () => {
+    expect(piece('paper', { rowText: 'excerpt' }).rowText).toBe('excerpt');
+    expect(piece('plain').rowText).toBe('publication');
+  });
+
+  it('gives an entry parsed before row text existed the default, so a cached content store cannot break the build', () => {
+    const stale = { ...pieceBaseSchema.parse({ title: 'Old' }), rowText: undefined } as unknown as PieceData;
+    expect(normalizePiece('old', stale).rowText).toBe('publication');
+  });
+
   it('applies smart quotes to the title, dek, and opening lines', () => {
     const p = piece('q', { title: 'What\'s "kept"', dek: 'It\'s here', openingLines: '"Go," she said.' });
     expect(p.title).toBe('What’s “kept”');
@@ -91,6 +101,17 @@ describe('normalizeCategory', () => {
   it('carries the hidden flag', () => {
     expect(category('speeches', { hidden: true }).hidden).toBe(true);
     expect(category('poetry').hidden).toBe(false);
+  });
+
+  it('flattens the layout, tiles four across by default', () => {
+    expect(category('poetry').layout).toEqual({ kind: 'tiles', perRow: 4 });
+    expect(category('poetry', { layout: { discriminant: 'tiles', value: { perRow: 3 } } }).layout).toEqual({ kind: 'tiles', perRow: 3 });
+    expect(category('talks', { layout: { discriminant: 'rows', value: { images: true } } }).layout).toEqual({ kind: 'rows', images: true });
+  });
+
+  it('gives an entry parsed before the layout existed the default layout, so a cached content store cannot break the build', () => {
+    const stale = { ...categorySchema.parse({ name: 'Poetry' }), layout: undefined } as unknown as CategoryData;
+    expect(normalizeCategory('poetry', stale).layout).toEqual({ kind: 'tiles', perRow: 4 });
   });
 });
 
@@ -184,5 +205,14 @@ describe('groupByCategory', () => {
 
   it('returns no sections when nothing is published', () => {
     expect(groupByCategory([], categories)).toEqual([]);
+  });
+
+  it('carries each category’s layout onto its section, and gives Uncategorized the tile grid', () => {
+    vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const talks = category('talks', { name: 'Talks', order: 3, layout: { discriminant: 'rows', value: { images: false } } });
+    const list = publishedSorted([piece('talk', { category: 'talks' }), piece('orphan', { category: 'deleted' })]);
+    const sections = groupByCategory(list, [...categories, talks]);
+    expect(sections.find((s) => s.slug === 'talks')?.layout).toEqual({ kind: 'rows', images: false });
+    expect(sections.find((s) => s.uncategorized)?.layout).toEqual({ kind: 'tiles', perRow: 4 });
   });
 });

@@ -1,36 +1,62 @@
 ---
 import Tile from './Tile.astro';
+import PieceRow from './PieceRow.astro';
 import type { Section } from '../lib/pieces';
-import { tileKinds } from '../lib/tiles';
+import { gridColumns, tileKinds } from '../lib/tiles';
 
 interface Props {
   section: Section;
 }
 
 const { section } = Astro.props;
+const { layout } = section;
+// The tile fallbacks double as the row squares, so both layouts share one alternation.
 const kinds = tileKinds(section.pieces);
+const columns = layout.kind === 'tiles' ? gridColumns(layout.perRow) : null;
+const thumbnails = layout.kind === 'rows' && layout.images;
 ---
 <div class="wrap">
-  <section class="category" aria-labelledby={section.slug}>
+  <section class:list={['category', layout.kind]} aria-labelledby={section.slug}>
     <h2 class="heading display" id={section.slug}>{section.name}</h2>
-    <ul class="grid">
-      {section.pieces.map((piece, index) => (
-        <li>
-          <Tile piece={piece} kind={kinds[index]} categoryName={section.name} />
-        </li>
-      ))}
-    </ul>
+    {columns ? (
+      <ul class="grid" style={`--columns: ${columns.desktop}; --columns-tablet: ${columns.tablet}; --columns-phone: ${columns.phone};`}>
+        {section.pieces.map((piece, index) => (
+          <li>
+            <Tile piece={piece} kind={kinds[index]} categoryName={section.name} perRow={columns.desktop} />
+          </li>
+        ))}
+      </ul>
+    ) : (
+      <ul class="list">
+        {section.pieces.map((piece, index) => (
+          <li>
+            <PieceRow piece={piece} thumbnail={thumbnails ? kinds[index] : null} />
+          </li>
+        ))}
+      </ul>
+    )}
   </section>
 </div>
 
 <style>
   .category { border-top: 1px solid var(--line); padding: 40px 0 64px; }
   .heading { font-size: 30px; line-height: 1.2; font-weight: 400; margin-bottom: 24px; scroll-margin-top: 32px; }
-  .grid { list-style: none; display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
-  @media (max-width: 1023px) { .grid { grid-template-columns: repeat(3, 1fr); gap: 20px; } }
+  .grid { list-style: none; display: grid; grid-template-columns: repeat(var(--columns), 1fr); gap: 24px; }
+  /* Rows take the row system: the heading in the label column, the list in the text column, hairlines between pieces. */
+  .category.rows { display: grid; grid-template-columns: 220px 1fr; gap: 32px; align-items: start; }
+  .category.rows .heading { margin-bottom: 0; }
+  .list { list-style: none; padding-top: 3px; }
+  .list li + li { border-top: 1px solid var(--line); }
+  .list li:first-child :global(.row) { padding-top: 0; }
+  .list li:last-child :global(.row) { padding-bottom: 0; }
+  @media (max-width: 1023px) { .grid { grid-template-columns: repeat(var(--columns-tablet), 1fr); gap: 20px; } }
+  @media (max-width: 899px) {
+    .category.rows { grid-template-columns: 1fr; gap: 20px; }
+    .list { padding-top: 0; }
+  }
   @media (max-width: 639px) {
     .category { padding: 32px 0 48px; }
     .heading { font-size: 26px; }
-    .grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    .grid { grid-template-columns: repeat(var(--columns-phone), 1fr); gap: 16px; }
   }
 </style>

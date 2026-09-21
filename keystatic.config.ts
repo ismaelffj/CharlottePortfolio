@@ -1,5 +1,6 @@
 /// <reference types="astro/client" />
 import { collection, config, fields, singleton } from '@keystatic/core';
+import { TILES_PER_ROW } from './src/lib/layout';
 
 // Rich text for short passages: paragraphs, bold, italic, links. Nothing else.
 const passage = (label: string, description?: string) =>
@@ -119,6 +120,35 @@ export default config({
           defaultValue: 1,
           validation: { isRequired: true },
         }),
+        layout: fields.conditional(
+          fields.select({
+            label: 'Layout',
+            description: 'Tiles show a square for each piece. Rows list the pieces one under another, with the date on the right.',
+            defaultValue: 'tiles',
+            options: [
+              { label: 'Tiles', value: 'tiles' },
+              { label: 'Rows', value: 'rows' },
+            ],
+          }),
+          {
+            tiles: fields.object({
+              perRow: fields.integer({
+                label: 'Tiles per row',
+                description: 'How many tiles sit side by side on a desktop screen. Tablets show at most three, phones two.',
+                defaultValue: TILES_PER_ROW.fallback,
+                validation: { isRequired: true, min: TILES_PER_ROW.min, max: TILES_PER_ROW.max },
+              }),
+            }),
+            rows: fields.object({
+              images: fields.checkbox({
+                label: 'Show images',
+                defaultValue: false,
+                description:
+                  'Shows each piece’s image as a small square at the start of its row. Pieces without an image get a plain rose or green square.',
+              }),
+            }),
+          },
+        ),
         hidden: fields.checkbox({
           label: 'Hidden',
           defaultValue: false,
@@ -207,6 +237,17 @@ export default config({
           description: 'Shows the piece in the Featured section of the home page, above the categories. Two work best.',
         }),
         dek: optionalText('One-line description (optional)', 'Shown under the title on the piece page.'),
+        rowText: fields.select({
+          label: 'Row text',
+          description:
+            'What shows under the title when the category uses the Rows layout. Where it appeared is the venue, outlet, or form, or the opening lines when there is none. The opening of the text is the first 155 characters of the abstract, body, or poem.',
+          defaultValue: 'publication',
+          options: [
+            { label: 'Where it appeared', value: 'publication' },
+            { label: 'One-line description', value: 'description' },
+            { label: 'Opening of the text', value: 'excerpt' },
+          ],
+        }),
         image: fields.image({
           label: 'Image (optional)',
           description: 'At least 1200 by 1200 pixels and under 3MB. The site crops it to a square.',

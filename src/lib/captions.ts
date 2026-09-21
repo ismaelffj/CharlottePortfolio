@@ -1,5 +1,6 @@
 import { formatMonthYear, formatYear } from './dates';
 import type { Category, Piece } from './pieces';
+import { excerpt } from './text';
 
 export interface MetaLine {
   /** "Originally published in <label>", linked when href is set. */
@@ -27,16 +28,49 @@ export function outletLabel(outlet: { name: string; url: string }): string {
   return '';
 }
 
-/** The caption under a tile on the home page; the section heading above the grid already names the category. */
-export function captionMeta(piece: Piece): string {
+/** Where the piece appeared: its outlet, form, or venue; empty when it appeared nowhere. */
+export function captionDetail(piece: Piece): string {
   switch (piece.kind) {
     case 'prose':
-      return join([outletLabel(piece.outlet), formatMonthYear(piece.date)]);
+      return outletLabel(piece.outlet);
     case 'poem':
-      return join([piece.form, formatYear(piece.date)]);
+      return piece.form.trim();
     case 'paper':
-      return join([piece.venue, formatYear(piece.date)]);
+      return piece.venue.trim();
   }
+}
+
+/** Month and year for prose, the year alone for poems and papers. */
+export function captionDate(piece: Piece): string {
+  return piece.kind === 'prose' ? formatMonthYear(piece.date) : formatYear(piece.date);
+}
+
+/** The caption under a tile on the home page; the section heading above the grid already names the category. */
+export function captionMeta(piece: Piece): string {
+  return join([captionDetail(piece), captionDate(piece)]);
+}
+
+export interface RowLine {
+  /** Decides the type: publication in the meta face, the rest in the body face; lines in quotes. */
+  kind: 'publication' | 'description' | 'excerpt' | 'lines';
+  text: string;
+}
+
+/**
+ * The line under the title in a rows section, by the piece's Row text choice. A chosen
+ * description or excerpt that turns out empty falls back to the publication line, which
+ * itself falls back to the opening lines, so a row never shows a gap.
+ */
+export function rowLine(piece: Piece): RowLine | null {
+  if (piece.rowText === 'description' && piece.dek.trim()) return { kind: 'description', text: piece.dek.trim() };
+  if (piece.rowText === 'excerpt') {
+    const text = excerpt(piece.plainText);
+    if (text) return { kind: 'excerpt', text };
+  }
+  const detail = captionDetail(piece);
+  if (detail) return { kind: 'publication', text: detail };
+  const lines = piece.openingLines.trim();
+  return lines ? { kind: 'lines', text: lines } : null;
 }
 
 /** The meta line on a featured card, which sits outside its section and so names the category itself. */

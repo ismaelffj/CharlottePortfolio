@@ -1,0 +1,79 @@
+---
+import { Image } from 'astro:assets';
+import type { Piece } from '../lib/pieces';
+import { THUMBNAIL_IMAGE, type TileKind } from '../lib/tiles';
+import { captionDate, rowLine } from '../lib/captions';
+
+interface Props {
+  piece: Piece;
+  /** The square at the start of the row when the category shows images; null keeps the row text-only. */
+  thumbnail: TileKind | null;
+}
+
+const { piece, thumbnail } = Astro.props;
+const line = rowLine(piece);
+---
+<a class="row" href={piece.url}>
+  {thumbnail === 'image' && piece.image && (
+    <span class="thumb image">
+      <Image src={piece.image} alt={piece.imageAlt} width={THUMBNAIL_IMAGE.width} widths={THUMBNAIL_IMAGE.widths} sizes={THUMBNAIL_IMAGE.sizes} />
+    </span>
+  )}
+  {thumbnail && thumbnail !== 'image' && <span class:list={['thumb', thumbnail]}></span>}
+  <span class="text">
+    <span class="title">{piece.title}</span>
+    {line && (
+      <span class:list={['line', line.kind, { meta: line.kind === 'publication' }]}>
+        {line.kind === 'lines' ? `“${line.text}”` : line.text}
+      </span>
+    )}
+  </span>
+  <span class="date meta">{captionDate(piece)}</span>
+</a>
+
+<style>
+  .row {
+    display: flex;
+    align-items: flex-start;
+    gap: 24px;
+    padding: 16px 0;
+    color: var(--text);
+    text-decoration: none;
+  }
+  .row:focus-visible { outline: 2px solid var(--rose); outline-offset: 2px; }
+  /* The square reuses the grid tile surfaces; the paper square has no room for its label and lines. */
+  .thumb { position: relative; flex: 0 0 auto; width: 56px; aspect-ratio: 1 / 1; overflow: hidden; }
+  .thumb::after { content: ''; position: absolute; inset: 0; pointer-events: none; }
+  .thumb.image::after { box-shadow: inset 0 0 0 1px var(--keyline); }
+  .thumb.image :global(img) { width: 100%; height: 100%; object-fit: cover; }
+  .thumb.paper { background: var(--paper); }
+  .thumb.rose { background: var(--rose-tile); }
+  .thumb.green { background: var(--green); }
+  .thumb.green::after { box-shadow: inset 0 0 0 1px var(--keyline-strong); }
+  .text { flex: 1 1 auto; min-width: 0; }
+  .title {
+    display: block;
+    font-size: 20px;
+    line-height: 1.3;
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+    transition: text-decoration-color var(--transition);
+  }
+  .row:hover .title { text-decoration-color: color-mix(in srgb, var(--rose) 50%, transparent); }
+  .line { display: block; margin-top: 4px; color: var(--muted); }
+  .line.publication { font-size: 13px; }
+  .line.description, .line.excerpt, .line.lines { font-size: 16px; line-height: 1.4; font-weight: 450; }
+  .line.description, .line.lines { font-style: italic; }
+  /* Sits on the title's first line, whatever the title wraps to. */
+  .date { flex: 0 0 auto; margin-left: auto; padding-top: 5px; font-size: 13px; color: var(--muted); text-align: right; }
+  @media (max-width: 639px) {
+    .row { gap: 12px; padding: 14px 0; }
+    .thumb { width: 48px; }
+    .title { font-size: 17px; font-weight: 450; }
+    .line.publication, .date { font-size: 12px; }
+    .line.description, .line.excerpt, .line.lines { font-size: 15px; }
+    .date { padding-top: 4px; }
+  }
+</style>

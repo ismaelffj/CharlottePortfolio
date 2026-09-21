@@ -1,9 +1,15 @@
 import type { ImageMetadata } from 'astro';
-import type { CategoryData, PieceData } from './schemas';
+import { DEFAULT_ROW_TEXT, TILES_PER_ROW, type RowText } from './layout';
+import type { CategoryData, LayoutData, PieceData } from './schemas';
 import { toPlainText } from './markdoc';
 import { readingMinutes, smartQuotes } from './text';
 
 export type PieceKind = 'prose' | 'poem' | 'paper';
+
+/** How a home page section lists its pieces: a grid of squares, or one row per piece with an optional thumbnail. */
+export type CategoryLayout = { kind: 'tiles'; perRow: number } | { kind: 'rows'; images: boolean };
+
+export const DEFAULT_LAYOUT: CategoryLayout = { kind: 'tiles', perRow: TILES_PER_ROW.fallback };
 
 export interface Poem {
   title: string;
@@ -20,6 +26,7 @@ export interface Piece {
   published: boolean;
   featured: boolean;
   dek: string;
+  rowText: RowText;
   image: ImageMetadata | null;
   imageAlt: string;
   openingLines: string;
@@ -41,6 +48,7 @@ export interface Category {
   name: string;
   order: number;
   hidden: boolean;
+  layout: CategoryLayout;
 }
 
 export interface Section {
@@ -48,6 +56,7 @@ export interface Section {
   name: string;
   pieces: Piece[];
   uncategorized: boolean;
+  layout: CategoryLayout;
 }
 
 export interface FeaturedEntry {
@@ -71,6 +80,8 @@ export function normalizePiece(slug: string, data: PieceInput): Piece {
     published: data.published,
     featured: data.featured,
     dek: smartQuotes(data.dek),
+    // Missing only from an entry a cached content store parsed before the field existed; see normalizeLayout.
+    rowText: data.rowText ?? DEFAULT_ROW_TEXT,
     image: data.image ?? null,
     imageAlt: data.imageAlt,
     openingLines: smartQuotes(data.openingLines),
@@ -119,8 +130,18 @@ export function normalizePiece(slug: string, data: PieceInput): Piece {
   }
 }
 
+/**
+ * A cached content store keeps entries parsed under an older schema until their file
+ * changes (see content.config.ts), so an entry can arrive without a layout at all.
+ * Such a file has no layout line, and the default is what a fresh parse would give it.
+ */
+function normalizeLayout(data: LayoutData | undefined): CategoryLayout {
+  if (!data) return DEFAULT_LAYOUT;
+  return data.discriminant === 'rows' ? { kind: 'rows', images: data.value.images } : { kind: 'tiles', perRow: data.value.perRow };
+}
+
 export function normalizeCategory(slug: string, data: CategoryData): Category {
-  return { slug, name: data.name, order: data.order, hidden: data.hidden };
+  return { slug, name: data.name, order: data.order, hidden: data.hidden, layout: normalizeLayout(data.layout) };
 }
 
 const newestFirst = (a: Piece, b: Piece) => b.date.getTime() - a.date.getTime() || a.title.localeCompare(b.title);
@@ -143,7 +164,13 @@ export function withoutHiddenCategories(pieces: Piece[], categories: Category[])
 export function groupByCategory(pieces: Piece[], categories: Category[]): Section[] {
   const known = new Set(categories.map((c) => c.slug));
   const sections: Section[] = sortCategories(categories)
-    .map((c) => ({ slug: c.slug, name: c.name, uncategorized: false, pieces: pieces.filter((p) => p.categorySlug === c.slug) }))
+    .map((c) => ({
+      slug: c.slug,
+      name: c.name,
+      uncategorized: false,
+      layout: c.layout,
+      pieces: pieces.filter((p) => p.categorySlug === c.slug),
+    }))
     .filter((s) => s.pieces.length > 0);
 
   const orphans = pieces.filter((p) => !known.has(p.categorySlug));
@@ -151,7 +178,7 @@ export function groupByCategory(pieces: Piece[], categories: Category[]): Sectio
     console.warn(`[content] piece "${orphan.slug}" points to the missing category "${orphan.categorySlug}"; showing it under ${UNCATEGORIZED.name}.`);
   }
   if (orphans.length > 0) {
-    sections.push({ slug: UNCATEGORIZED.slug, name: UNCATEGORIZED.name, uncategorized: true, pieces: orphans });
+    sections.push({ slug: UNCATEGORIZED.slug, name: UNCATEGORIZED.name, uncategorized: true, layout: DEFAULT_LAYOUT, pieces: orphans });
   }
   return sections;
 }

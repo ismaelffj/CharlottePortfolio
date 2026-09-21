@@ -10,6 +10,12 @@ import {
   settingsSchema,
 } from './lib/schemas';
 
+// Astro clears its content store only when this file's text changes; a file whose contents are
+// unchanged is otherwise served from the store as it was last parsed, even after the schemas in
+// ./lib/schemas change shape. When a schema gains a field, change this file too (this comment is
+// enough) so every entry is parsed again, locally and in the cached production build.
+// Schema revision: 2026-09-21, category layout and piece row text.
+
 const single = (name: string) => glob({ pattern: `${name}/index.yaml`, base: './src/content' });
 
 // An empty or malformed image value renders as "no image" with a warning.

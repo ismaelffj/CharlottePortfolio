@@ -135,3 +135,52 @@ describe('other schemas', () => {
     expect(settings.description).toBe('');
   });
 });
+
+describe('category layout', () => {
+  const layoutOf = (layout: unknown) => categorySchema.parse({ name: 'Poetry', layout }).layout;
+
+  it('shows a category without a layout line as tiles, four across, without a warning', () => {
+    expect(categorySchema.parse({ name: 'Poetry' }).layout).toEqual({ discriminant: 'tiles', value: { perRow: 4 } });
+    expect(warn).not.toHaveBeenCalled();
+  });
+
+  it('keeps a chosen number of tiles per row, coercing a numeric string', () => {
+    expect(layoutOf({ discriminant: 'tiles', value: { perRow: 3 } })).toEqual({ discriminant: 'tiles', value: { perRow: 3 } });
+    expect(layoutOf({ discriminant: 'tiles', value: { perRow: '6' } })).toEqual({ discriminant: 'tiles', value: { perRow: 6 } });
+  });
+
+  it('falls back to four across when tiles per row is out of range or not a number, and says so', () => {
+    expect(layoutOf({ discriminant: 'tiles', value: { perRow: 9 } })).toEqual({ discriminant: 'tiles', value: { perRow: 4 } });
+    expect(layoutOf({ discriminant: 'tiles', value: { perRow: 'many' } })).toEqual({ discriminant: 'tiles', value: { perRow: 4 } });
+    expect(warn).toHaveBeenCalledWith(expect.stringContaining('[content] tiles per row'));
+  });
+
+  it('keeps a rows layout with its images flag, and reads a missing flag as off without a warning', () => {
+    expect(layoutOf({ discriminant: 'rows', value: { images: true } })).toEqual({ discriminant: 'rows', value: { images: true } });
+    expect(layoutOf({ discriminant: 'rows', value: {} })).toEqual({ discriminant: 'rows', value: { images: false } });
+    expect(warn).not.toHaveBeenCalled();
+  });
+
+  it('falls back to tiles when the layout is unknown, and says so', () => {
+    expect(layoutOf({ discriminant: 'masonry', value: {} })).toEqual({ discriminant: 'tiles', value: { perRow: 4 } });
+    expect(warn).toHaveBeenCalledWith(expect.stringContaining('[content] layout'));
+  });
+});
+
+describe('piece row text', () => {
+  it('shows a piece without a row text line as the publication line, without a warning', () => {
+    const piece = pieceBaseSchema.parse({ title: 't', kind: { discriminant: 'prose', value: { body: '' } }, date: '2024-03-15' });
+    expect(piece.rowText).toBe('publication');
+    expect(warn).not.toHaveBeenCalled();
+  });
+
+  it('keeps a chosen row text', () => {
+    expect(pieceBaseSchema.parse({ title: 't', rowText: 'description' }).rowText).toBe('description');
+    expect(pieceBaseSchema.parse({ title: 't', rowText: 'excerpt' }).rowText).toBe('excerpt');
+  });
+
+  it('falls back to the publication line when the row text is unknown, and says so', () => {
+    expect(pieceBaseSchema.parse({ title: 't', rowText: 'abstract' }).rowText).toBe('publication');
+    expect(warn).toHaveBeenCalledWith(expect.stringContaining('[content] row text'));
+  });
+});
