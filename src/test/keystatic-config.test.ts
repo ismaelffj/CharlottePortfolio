@@ -40,6 +40,17 @@ describe('keystatic config', () => {
     expect(rowText?.options.map((option) => option.value)).toEqual(['none', 'description', 'excerpt']);
   });
 
+  it('refuses a slug that is not lowercase letters, numbers, and hyphens, for pieces and categories alike', () => {
+    const title = config.collections?.pieces?.schema.title;
+    const name = config.collections?.categories?.schema.name;
+    expect(title?.validate({ name: 'Spin', slug: 'spin' }, undefined)).toEqual({ name: 'Spin', slug: 'spin' });
+    expect(title?.validate({ name: 'Two Poems', slug: 'two-poems-2' }, undefined)).toEqual({ name: 'Two Poems', slug: 'two-poems-2' });
+    expect(() => title?.validate({ name: 'Spin', slug: 'Spin' }, undefined)).toThrow('Regenerate');
+    expect(() => title?.validate({ name: 'Care: What', slug: 'Care: What' }, undefined)).toThrow('Regenerate');
+    expect(() => title?.validate({ name: 'Dash', slug: '-dash-' }, undefined)).toThrow('Regenerate');
+    expect(() => name?.validate({ name: 'Research papers', slug: 'Research papers' }, undefined)).toThrow('Regenerate');
+  });
+
   it('uses local storage outside production', () => {
     expect(config.storage.kind).toBe('local');
   });

@@ -12,9 +12,11 @@ import {
 
 // Astro clears its content store only when this file's text changes; a file whose contents are
 // unchanged is otherwise served from the store as it was last parsed, even after the schemas in
-// ./lib/schemas change shape. When a schema gains a field, change this file too (this comment is
-// enough) so every entry is parsed again, locally and in the cached production build.
-// Schema revision: 2026-09-21, category layout and piece row text.
+// ./lib/schemas change shape or the file moves to another folder (the entry keeps its old path and
+// its images go missing). When a schema gains a field or entries are moved on disk, change this
+// file too (this comment is enough) so every entry is parsed again, locally and in the cached
+// production build.
+// Content revision: 2026-09-21 (2), piece folders renamed to their slugs.
 
 const single = (name: string) => glob({ pattern: `${name}/index.yaml`, base: './src/content' });
 

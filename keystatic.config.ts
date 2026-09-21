@@ -37,6 +37,19 @@ const proseBody = fields.markdoc.inline({
 const optionalText = (label: string, description?: string) =>
   fields.text({ label, description });
 
+// The slug becomes the entry's folder name, and the Vite dev server refuses paths with a colon in them,
+// so the admin only accepts the lowercase, hyphenated form its own generator produces.
+const SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+const slugRules = (source: 'name' | 'title', entry: 'category' | 'piece') => ({
+  description: `Made from the ${source}. Leave this alone after creating the ${entry}.`,
+  validation: {
+    pattern: {
+      regex: SLUG_PATTERN,
+      message: `Lowercase letters, numbers, and hyphens only. Press Regenerate to make it from the ${source}.`,
+    },
+  },
+});
+
 export default config({
   storage: import.meta.env.DEV ? { kind: 'local' } : { kind: 'cloud' },
   cloud: { project: 'dreamwell/charlotte-portfolio' },
@@ -111,7 +124,7 @@ export default config({
       schema: {
         name: fields.slug({
           name: { label: 'Name' },
-          slug: { description: 'Leave this alone after creating the category.' },
+          slug: slugRules('name', 'category'),
         }),
         order: fields.integer({
           label: 'Order',
@@ -165,7 +178,7 @@ export default config({
       schema: {
         title: fields.slug({
           name: { label: 'Title' },
-          slug: { description: 'Leave this alone after creating the piece.' },
+          slug: slugRules('title', 'piece'),
         }),
         kind: fields.conditional(
           fields.select({
