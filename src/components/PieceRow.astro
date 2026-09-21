@@ -61,8 +61,8 @@ const detail = captionDetail(piece);
     transition: text-decoration-color var(--transition);
   }
   .row:hover .title { text-decoration-color: color-mix(in srgb, var(--rose) 50%, transparent); }
+  /* One style whatever the line's source; the reader cannot tell a description from a cut abstract, and should not need to. */
   .line { display: block; margin-top: 4px; font-size: 16px; line-height: 1.4; font-weight: 450; color: var(--muted); }
-  .line.description, .line.lines { font-style: italic; }
   .detail { display: block; margin-top: 4px; font-size: 13px; color: var(--muted); }
   .line + .detail { margin-top: 6px; }
   /* Sits on the title's first line, whatever the title wraps to. */

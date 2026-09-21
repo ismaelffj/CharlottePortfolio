@@ -51,7 +51,7 @@ export function captionMeta(piece: Piece): string {
 }
 
 export interface RowLine {
-  /** Decides the type: the description and typed lines italic, the lines in quotes, the excerpt upright. */
+  /** Where the text came from; the row sets typed lines in quotes and styles all three alike. */
   kind: 'description' | 'lines' | 'excerpt';
   text: string;
 }
