@@ -1,7 +1,7 @@
 name: Research papers
 order: 3
 layout:
-  discriminant: rows
+  discriminant: tiles
   value:
-    images: false
+    perRow: 4
 hidden: false

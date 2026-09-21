@@ -1,7 +1,7 @@
 name: Speeches
 order: 5
 layout:
-  discriminant: rows
+  discriminant: tiles
   value:
-    images: false
+    perRow: 4
 hidden: false
