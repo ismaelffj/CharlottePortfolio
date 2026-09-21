@@ -167,9 +167,11 @@ kind:
 category: articles
 date: 2021-02-12
 published: true
+featured: false
 dek: >-
   Never underestimate your power- there is power in numbers, we withhold our
   funds and they will respond
+extraLine: description
 image: image.JPG
 imageAlt: Placeholder artwork.
 editorsNote: >-
